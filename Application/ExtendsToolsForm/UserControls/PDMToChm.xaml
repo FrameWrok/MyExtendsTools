@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="ExtendsToolsForm.UserControls.PDMToChm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExtendsToolsForm.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="725">
+    <Grid>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="TextBox">
+                    <Setter Property="Height" Value="30"></Setter>
+                    <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                    <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                </Style>
+            </Grid.Resources>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <Label HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top">PDM文件:</Label>
+                <TextBox Grid.Column="1" Style="{x:Null}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="txtPdmList" Margin="5,0,5,0" IsReadOnly="True"></TextBox>
+                <Button Grid.Column="2" Width="100" Height="30" Margin="0,0,0,0" VerticalAlignment="Bottom" Content="选择PDM文件" Name="btnFilePDMSelect" Click="btnFilePDMSelect_Click"></Button>
+            </Grid>
+
+            <DockPanel Grid.Row="1" VerticalAlignment="Bottom">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">保存的chm文件:</Label>
+                    <TextBox Grid.Column="1" Name="txtChmFile" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" TextAlignment="Left" Margin="5" Height="30"></TextBox>
+                    <Button Grid.Column="2" Height="30" Width="100" Content="生成chm" Name="btnGeneratePDM" Click="btnGeneratePDM_Click" ToolTip="生成chm" ></Button>
+                </Grid>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

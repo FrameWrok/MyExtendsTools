@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="ExtendsToolsForm.UserControls.DbOrPdmToChm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExtendsToolsForm.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="725">    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>            
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" Name="toChmFromTypeTabControl">
+            <TabItem Header="PDM To Chm" Name="pdmtochmtab">
+                <local:PDMToChm />
+            </TabItem>
+            <TabItem Header="DB To Chm" Name="dbtochm">
+                <local:DbTablesToPdm />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
+    
