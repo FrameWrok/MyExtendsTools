@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--数据类型对照-->
+<DataTye>
+  <!--Decimal-->
+  <System.Decimal>
+    <decimal DataBaseType="SqlServer"/>
+    <numeric DataBaseType="SqlServer"/>
+    <money DataBaseType="SqlServer"/>
+    <smallmoney DataBaseType="SqlServer"/>
+    <decimal DataBaseType="Oracle"/>
+    <decimal DataBaseType="PostgreSQL" StoreSpace="变长" Description="用户声明精度，精确" Scope="无限制"/>
+    <numeric DataBaseType="PostgreSQL" StoreSpace="变长" Description="用户声明精度，精确" Scope="无限制"/>
+  </System.Decimal>
+  <!--float-->
+  <System.Single>
+    <float DataBaseType="SqlServer"/>
+    <float DataBaseType="Oracle"/>
+    <float8 DataBaseType="PostgreSQL"/>
+  </System.Single>
+  <!--Int 16-->
+  <System.Int16>
+    <smallint DataBaseType="SqlServer"/>
+    <tinyint DataBaseType="SqlServer"/>
+    <smallint DataBaseType="PostgreSQL" StoreSpace="2 字节" Description="小范围整数，2字节长有符号整数" Scope="-32768 到 +32767"/>
+    <int2 DataBaseType="PostgreSQL" StoreSpace="2 字节" Description="小范围整数，四字节长有符号整数，smallint别名" Scope="-32768 到 +32767"/>
+  </System.Int16>
+  <!--int32-->
+  <System.Int32>
+    <int DataBaseType="SqlServer"/>
+    <integer DataBaseType="PostgreSQL" StoreSpace="4 字节" Description="常用的整数，四字节长有符号整数" Scope="-2147483648 到 +2147483647"/>
+    <int4 DataBaseType="PostgreSQL" StoreSpace="4 字节" Description="常用的整数，四字节长有符号整数，integer别名" Scope="-2147483648 到 +2147483647"/>
+    <int DataBaseType="PostgreSQL" StoreSpace="4 字节" Description="常用的整数，四字节长有符号整数，integer别名" Scope="-2147483648 到 +2147483647"/>
+    <serial DataBaseType="PostgreSQL" Description="自增四字节整数" Scope="1 到 +2147483647"/>
+  </System.Int32>
+  <!--long-->
+  <System.Int64>
+    <bigint DataBaseType="SqlServer"/>
+    <number DataBaseType="Oracle"/>
+    <bigint DataBaseType="PostgreSQL" StoreSpace="8 字节" Description="大范围的整数，有符号 8 字节整数" Scope="-9223372036854775808 到 9223372036854775807"/>
+    <int8 DataBaseType="PostgreSQL" StoreSpace="8 字节" Description="大范围的整数，有符号 8 字节整数，bigint别名" Scope="-9223372036854775808 到 9223372036854775807"/>
+    <bigserial DataBaseType="PostgreSQL" StoreSpace="8 字节" Description="大范围的自增整数，自增八字节整数" Scope="1 到 9223372036854775807"/>
+    <serial8 DataBaseType="PostgreSQL" StoreSpace="8 字节" Description="大范围的自增整数，自增八字节整数，bigserial别名" Scope="1 到 9223372036854775807"/>
+  </System.Int64>
+  <!--boolean-->
+  <System.Boolean>
+    <bit DataBaseType="SqlServer" Description="逻辑布尔量 （真/假）（sql插入时，只允许（0,1））"/>
+    <boolean DataBaseType="PostgreSQL" Description="逻辑布尔量 （真/假）"/>
+    <bool DataBaseType="PostgreSQL" Description="逻辑布尔量 （真/假），boolean别名"/>
+  </System.Boolean>
+  <!--DateTime-->
+  <System.DateTime>
+    <datetime DataBaseType="SqlServer"/>
+    <smalldatetime DataBaseType="SqlServer"/>
+    <date DataBaseType="SqlServer"/>
+    <datetime2 DataBaseType="SqlServer"/>
+    <time DataBaseType="SqlServer"/>
+    <datetimeoffset DataBaseType="SqlServer"/>
+    <date DataBaseType="Oracle"/>
+    <date DataBaseType="PostgreSQL"/>
+    <timetz DataBaseType="PostgreSQL"/>
+    <timestamptz DataBaseType="PostgreSQL"/>
+    <timestamp DataBaseType="PostgreSQL"/>
+    <reltime DataBaseType="PostgreSQL"/>
+    <_date DataBaseType="PostgreSQL"/>
+    <_timetz DataBaseType="PostgreSQL"/>
+    <_timestamptz DataBaseType="PostgreSQL"/>
+    <_timestamp DataBaseType="PostgreSQL"/>
+    <_reltime DataBaseType="PostgreSQL"/>
+  </System.DateTime>
+  <!--其他类型没有列出的默认为字符串-->
+  <System.String>
+  </System.String>
+</DataTye>

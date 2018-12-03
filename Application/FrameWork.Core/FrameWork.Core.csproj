@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{45127249-069E-432D-B83A-761DE1A5796A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FrameWork.Core</RootNamespace>
+    <AssemblyName>FrameWork.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aspose.Cells, Version=4.7.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>RefDll\Aspose.Cells.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationDataCommon.cs" />
+    <Compile Include="CoreAttribute\FrameColumnMappingAttributes.cs" />
+    <Compile Include="CoreAttribute\PrimaryKeyAttribute.cs" />
+    <Compile Include="DataCommon.cs" />
+    <Compile Include="Emaill\EmailType.cs" />
+    <Compile Include="EmbeddedResource.cs" />
+    <Compile Include="Extends\FrameDataTableExtends.cs" />
+    <Compile Include="FileIO\FileCompress.cs" />
+    <Compile Include="FileIO\Log.cs" />
+    <Compile Include="FrameData\DatabaseStruct.cs" />
+    <Compile Include="FrameData\DataBaseType.cs" />
+    <Compile Include="FrameData\FrameDataBase.cs" />
+    <Compile Include="FrameData\FrameParameterDirection.cs" />
+    <Compile Include="FrameEntity\FrameEntity.cs" />
+    <Compile Include="FrameEntity\FrameEntityBLL.cs" />
+    <Compile Include="FrameEntity\FrameGenerateSql.cs" />
+    <Compile Include="HelperClass\LangType.cs" />
+    <Compile Include="HelperClass\MethodInvoke.cs" />
+    <Compile Include="HelperClass\PrivateClass.cs" />
+    <Compile Include="HelperClass\FrameAction.cs" />
+    <Compile Include="HelperClass\FrameActivator.cs" />
+    <Compile Include="HelperClass\FrameDefaultCultureInfo.cs" />
+    <Compile Include="HelperClass\FrameMethodInvoke.cs" />
+    <Compile Include="HelperClass\FrameRandom.cs" />
+    <Compile Include="HelperClass\FrameStringCaseType.cs" />
+    <Compile Include="HttpHandlers\BaseHandler.cs" />
+    <Compile Include="HttpHandlers\HandlerDownfile.cs" />
+    <Compile Include="Office\Excel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Exceptions\FrameCHExceptionResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FrameCHExceptionResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Exceptions\FrameENExceptionResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FrameENExceptionResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\FileResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ResourceMSG.cs" />
+    <Compile Include="WindowsInfo\SysGuid.cs" />
+    <Compile Include="WindowsInfo\Windows.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Exceptions\FrameCHExceptionResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FrameCHExceptionResource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Exceptions\FrameENExceptionResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FrameENExceptionResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\FileResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>FileResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RefDll\Mono.Security.dll" />
+    <EmbeddedResource Include="RefDll\Npgsql.dll" />
+    <EmbeddedResource Include="RefDll\Oracle.DataAccess2.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DataBaseSchema\DataTypeCompare.xml" />
+    <EmbeddedResource Include="DataBaseSchema\SmartBaseQueryTableSql.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ICSharpCode.SharpZLib\ICSharpCode.SharpZLib.csproj">
+      <Project>{0E7413FF-EB9E-4714-ACF2-BE3A6A7B2FFD}</Project>
+      <Name>ICSharpCode.SharpZLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartExtends\SmartExtends.csproj">
+      <Project>{6d83018f-b6ff-487e-b968-bab531fec5f5}</Project>
+      <Name>SmartExtends</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RefDll\Aspose.Cells.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Aspose.Cells.lic" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Office\Aspose.Excel.FileFormatType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FrameEncript\" />
+    <Folder Include="WebApi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ICSharpCode.SharpZLib\ICSharpCode.SharpZLib.csproj">
+      <Project>{0e7413ff-eb9e-4714-acf2-be3a6a7b2ffd}</Project>
+      <Name>ICSharpCode.SharpZLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartExtends\SmartExtends.csproj">
+      <Project>{6d83018f-b6ff-487e-b968-bab531fec5f5}</Project>
+      <Name>SmartExtends</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\StyleCop\StyleCop.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

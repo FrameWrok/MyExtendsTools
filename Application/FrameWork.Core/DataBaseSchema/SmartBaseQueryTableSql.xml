@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--查询数据库表结构-->
+<SmartFrameWorkSqlXml>
+  <TableStruct>
+    <!--数据库类型为SqlServer数据库-->
+    <SqlServer>
+      SELECT --CASE WHEN a.colorder = 1 THEN d.name ELSE '' END tablename,  --表名
+      a.colorder AS no ,                                                     --字段序号
+      a.name AS columnname ,                                               --字段名称
+      b.name AS datatype ,                                                 --字段数据类型
+      COLUMNPROPERTY(a.id, a.name, 'PRECISION') AS [DATALENGTH] ,             --字段长度
+      ISNULL(COLUMNPROPERTY(a.id, a.name, 'Scale'), 0) AS scale ,          --字段小数位数
+      /*
+      , CASE WHEN COLUMNPROPERTY(a.id, a.name, 'IsIdentity') = 1 THEN 1 ELSE 0 END oneselfgrow --是否自增长标识
+      , a.length AS 占用字节数
+      , e.text defaultvalue                                                 --默认值
+      */
+      ( CASE WHEN EXISTS ( SELECT 1
+      FROM   sysobjects SYSOBJ
+      INNER JOIN sysindexes SYSIND ON SYSOBJ.name = SYSIND.name
+      INNER JOIN sysindexkeys SYSINDKEY ON SYSIND.indid = SYSINDKEY.indid
+      WHERE  SYSOBJ.xtype = 'PK'
+      AND SYSINDKEY.id = A.id
+      AND SYSINDKEY.colid = A.colid ) THEN 1
+      ELSE 0
+      END ) ispk ,                                             --是否主键
+      CASE WHEN a.isnullable = 1 THEN 0
+      ELSE 1
+      END AS notnull ,             --是否不允许为空
+      ISNULL(g.[value], '') comments                                      --字段说明
+      FROM    syscolumns a
+      LEFT OUTER JOIN systypes b ON a.xtype = b.xusertype
+      INNER JOIN sysobjects d ON a.id = d.id
+      AND d.xtype = 'U'
+      AND d.name != 'dtproperties'
+      LEFT OUTER JOIN syscomments e ON a.cdefault = e.id
+      LEFT OUTER JOIN sys.extended_properties g ON a.id = g.class
+      AND a.colid = g.minor_id
+      LEFT OUTER JOIN sys.extended_properties f ON d.id = f.class
+      AND f.minor_id = 0
+      WHERE   d.NAME = '$TableName$'
+      ORDER BY a.id ,
+      a.colorder
+    </SqlServer>
+    <!--数据库类型为Oracle数据库-->
+    <Oracle>
+      SELECT  TAB.COLUMN_ID AS NO ,	                                      --字段序号
+      TAB.COLUMN_NAME AS columnname ,                                    --字段名称
+      TAB.DATA_TYPE AS datatype ,	                                      --字段数据类型
+      TAB.DATA_LENGTH AS datalength ,	                                  --字段长度
+      TAB.DATA_SCALE AS scale ,                                         --字段小数位数
+      ( CASE WHEN EXISTS ( SELECT 1
+      FROM   USER_CONS_COLUMNS CU
+      INNER JOIN USER_CONSTRAINTS AU ON AU.constraint_name = CU.constraint_name
+      AND AU.constraint_type = 'P'
+      AND AU.table_name = CU.table_name
+      WHERE  CU.table_name = TAB.TABLE_NAME
+      AND CU.column_name = TAB.COLUMN_NAME )
+      THEN 1
+      ELSE 0
+      END ) ISPK ,                                                        --是否主键
+      ( CASE TAB.NULLABLE
+      WHEN 'Y' THEN 1
+      WHEN 'N' THEN 0
+      END ) NOTNULL ,  --是否不允许为空
+      COL.comments 	                                                    --字段备注(说明)
+      FROM    all_tab_columns TAB
+      INNER JOIN user_col_comments COL ON TAB.TABLE_NAME = COL.table_name
+      AND TAB.COLUMN_NAME = COL.column_name
+      WHERE   TAB.TABLE_NAME = '$TableName$'
+      ORDER BY COLUMN_ID;
+    </Oracle>
+    <!--数据库类型为PostgreSQL数据库-->
+    <PostgreSQL>
+      SELECT DISTINCT
+      ATTR.attnum AS no ,                                                  --字段序号
+      ATTR.attname columnname ,                                            --字段名
+      TYPES.typname datatype ,                                             --字段类型
+      --,ATTR.attlen typelength                                             --类型长度
+      ( CASE WHEN ATTR.atttypmod > 4
+      AND CAST(TYPES.typname AS TEXT) != '_numeric'
+      THEN ATTR.atttypmod - 4
+      WHEN CAST(TYPES.typname AS TEXT) = '_numeric' THEN -1
+      ELSE ATTR.atttypmod
+      END ) [length] , --字段长度
+      ( CASE WHEN ATTR.attnotnull = true THEN 1
+      ELSE 0
+      END ) AS notnull ,                                         --是否不允许为空
+      DES.description AS comments                                        --字段说明
+      FROM    PG_CLASS CLASS
+      INNER JOIN PG_ATTRIBUTE ATTR ON CLASS.OID = ATTR.ATTRELID
+      INNER JOIN PG_TYPE TYPES ON TYPES.OID = ATTR.ATTTYPID
+      LEFT JOIN pg_description DES ON DES.objoid = CLASS.oid
+      AND DES.objsubid = ATTR.attnum
+      WHERE   CLASS.RELNAME = '$TableName$'
+      AND ATTR.attnum > 0
+      ORDER BY ATTR.attnum
+    </PostgreSQL>
+  </TableStruct>
+  <FKStruct>
+    <SqlServer>
+      CREATE PROC [dbo].[QueryFk]
+      (
+      @TableName VARCHAR(200)
+      )
+      AS
+      BEGIN
+      IF ( NOT EXISTS ( SELECT    object_id ,
+      name ,
+      ROW_NUMBER() OVER ( ORDER BY name ) AS RowNo
+      FROM      sys.tables
+      WHERE     type_desc = 'USER_TABLE'
+      AND object_id = OBJECT_ID('FkInfo') ) )
+      BEGIN
+      CREATE TABLE FKInfo
+      (
+      PkTableID INT ,
+      PkTable VARCHAR(200) ,
+      FkID INT ,
+      FkName VARCHAR(200) ,
+      PkColumnID INT ,
+      PkColumn VARCHAR(200) ,
+      FkTableID INT ,
+      FkTable VARCHAR(200) ,
+      FkColumnID INT ,
+      FkColumn VARCHAR(200) ,
+      IsCheck BIT ,
+      DropScript VARCHAR(1000) ,
+      CreateScript VARCHAR(1000) ,
+      CreateDate DATETIME DEFAULT GETDATE()
+      )
+      END
+      DECLARE @PkTableID INT ,
+      @PkTable VARCHAR(200) ,
+      @FkID INT ,
+      @FkName VARCHAR(200) ,
+      @PkColumnID INT ,
+      @PkColumn VARCHAR(200) ,
+      @FkTableID INT ,
+      @FkTable VARCHAR(200) ,
+      @FkColumnID INT ,
+      @FkColumn VARCHAR(200) ,
+      @IsCheck BIT ,
+      @DropScript VARCHAR(1000) ,
+      @CreateScript VARCHAR(1000)
+      SET @PkTable = @TableName
+      SET @DropScript = 'IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N''[dbo].[FkName]'') AND parent_object_id = OBJECT_ID(N''[dbo].[FkTable]''))
+      ALTER TABLE [dbo].[FkTable] DROP CONSTRAINT [FkName]'
+      SET @CreateScript = 'ALTER TABLE [dbo].[FkTable]  WITH CHECK ADD  CONSTRAINT [FkName] FOREIGN KEY([FkColumn])
+      REFERENCES [dbo].[PkTable] ([PkColumn])
+      ALTER TABLE [dbo].[FkTable] CHECK CONSTRAINT [FkName]
+      '
+      DECLARE GetFK_Cursor CURSOR
+      FOR
+      WITH    t AS ( SELECT   O.object_id AS PkTableID ,
+      O.name AS PkTable ,
+      FK.object_id AS FkID ,
+      FK.name AS FkName ,
+      MTC.colid AS PkColumnID ,
+      MTC.name AS PkColumn ,
+      Fo.object_id AS FkTableID ,
+      Fo.name AS FkTable ,
+      C.colid AS FkColumnID ,
+      C.name AS FkColumn ,
+      ( CASE fk.is_not_trusted
+      WHEN 1 THEN 0
+      ELSE 0
+      END ) AS IsCheck
+      FROM     sys.foreign_key_columns AS FKC
+      INNER JOIN syscolumns AS MTC ON FKC.referenced_object_id = MTC.id
+      AND MTC.colid = FKC.referenced_column_id
+      INNER JOIN syscolumns AS C ON FKC.parent_object_id = C.id
+      AND FKC.parent_column_id = C.colid
+      INNER JOIN sys.foreign_keys AS FK ON FK.object_id = FKC.constraint_object_id
+      INNER JOIN sys.objects AS Fo ON Fo.object_id = C.id
+      INNER JOIN sys.objects AS O ON O.object_id = FK.referenced_object_id
+      WHERE    O.name = @PkTable
+      )
+      SELECT  PkTableID ,
+      PkTable ,
+      FkID ,
+      FkName ,
+      PkColumnID ,
+      PkColumn ,
+      FkTableID ,
+      FkTable ,
+      FkColumnID ,
+      FkColumn ,
+      IsCheck
+      FROM    t
+      OPEN GetFK_Cursor
+      FETCH NEXT FROM GetFK_Cursor INTO @PkTableID, @PkTable, @FkID, @FkName,
+      @PkColumnID, @PkColumn, @FkTableID, @FkTable, @FkColumnID,
+      @FkColumn, @IsCheck
+      WHILE @@FETCH_STATUS = 0
+      BEGIN
+      SET @DropScript = REPLACE(@DropScript, 'FkName', @FkName)
+      SET @DropScript = REPLACE(@DropScript, 'FkTable', @FkTable)
+
+      SET @CreateScript = REPLACE(@CreateScript, 'FkTable', @FkTable)
+      SET @CreateScript = REPLACE(@CreateScript, 'FkName', @FkName)
+      SET @CreateScript = REPLACE(@CreateScript, 'FkColumn',
+      @FkColumn)
+      SET @CreateScript = REPLACE(@CreateScript, 'PkTable', @PkTable)
+      SET @CreateScript = REPLACE(@CreateScript, 'PkColumn',
+      @PkColumn)
+      INSERT  dbo.FKInfo
+      ( PkTableID ,
+      PkTable ,
+      FkID ,
+      FkName ,
+      PkColumnID ,
+      PkColumn ,
+      FkTableID ,
+      FkTable ,
+      FkColumnID ,
+      FkColumn ,
+      IsCheck ,
+      DropScript ,
+      CreateScript
+      )
+      VALUES  ( @PkTableID ,
+      @PkTable ,
+      @FkID ,
+      @FkName ,
+      @PkColumnID ,
+      @PkColumn ,
+      @FkTableID ,
+      @FkTable ,
+      @FkColumnID ,
+      @FkColumn ,
+      @IsCheck ,
+      @DropScript ,
+      @CreateScript
+      )
+      SET @DropScript = 'IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N''[dbo].[FkName]'') AND parent_object_id = OBJECT_ID(N''[dbo].[FkTable]''))
+      ALTER TABLE [dbo].[FkTable] DROP CONSTRAINT [FkName]'
+      SET @CreateScript = 'ALTER TABLE [dbo].[FkTable]  WITH CHECK ADD  CONSTRAINT [FkName] FOREIGN KEY([FkColumn]) REFERENCES [dbo].[PkTable] ([PkColumn])
+      ALTER TABLE [dbo].[FkTable] CHECK CONSTRAINT [FkName]'
+      FETCH NEXT FROM GetFK_Cursor INTO @PkTableID, @PkTable, @FkID,
+      @FkName, @PkColumnID, @PkColumn, @FkTableID, @FkTable,
+      @FkColumnID, @FkColumn, @IsCheck
+      END
+      CLOSE GetFK_Cursor
+      DEALLOCATE GetFK_Cursor
+      END
+    </SqlServer>
+  </FKStruct>
+</SmartFrameWorkSqlXml>
