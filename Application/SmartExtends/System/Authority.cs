@@ -33,7 +33,7 @@ namespace SmartExtends.System
             //////index:0为本身的方法；1为调用方法；2为其上上层，依次类推
             ////mb = ss.GetFrame(1).GetMethod();
 
-
+            return;
             StackFrame[] sfs = ss.GetFrames();
             Queue<Assembly> assemblyQueue = new Queue<Assembly>();
             foreach (var item in sfs)

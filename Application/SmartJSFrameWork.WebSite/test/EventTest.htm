@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <script language="javascript" type="text/javascript" src="../Core/Script/SmartBase.js"></script>
+    <script language="javascript" type="text/javascript">       
+          window.onload = function() {
+              var btn = document.createElement("input");
+              btn.setAttribute("type", "button");
+              btn.setAttribute("value", "EventManager Test");
+              function fn() {
+                  var e = e || window.event;
+                  alert(123);
+              }
+              system.EventManager.addListener(btn, "onclick", fn, true);
+              document.body.appendChild(btn);
+          }
+            
+    </script>
+</head>
+<body>
+
+</body>
+</html>

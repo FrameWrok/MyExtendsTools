@@ -1,0 +1,185 @@
+﻿<%-- 
+Name: 
+Author: 李丙龙 
+Description: 生成 List 页面后台代码，可选择表或者写sql查询语句
+--%>
+<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="数据源配置" Optional="True" OnChanged="QuerySqlScriptChange" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="数据源配置" Description="查询sql" Optional="True" OnChanged="QuerySqlScriptChange" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="数据源配置" Description="表选择" Optional="True" OnChanged="tablechanged" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+
+<%@ Property Name="GridColumn" Type="Dictionary<String,bool>" Category="字段配置" Description="列表显示字段" %>
+<%@ Property  Name="SelectedTableName" Type="String" Category="字段配置" Description="无需操作此字段" %>
+
+<%@ Property Name="DALClassFullName" Type="String" Category="代码配置" Optional="False" Description="dal类全称" %>
+<%@ Property Name="EntityClassFullName" Type="String" Category="代码配置" Optional="False" Description="实体类类全称" %>
+
+<%@ Property Name="outstring" Type="String" Category="输出" Optional="True" Description="output" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%--<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>--%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="False" %>
+<%
+ shortDescriptionLen=6;
+et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+ 
+%>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.IO;
+using System.Text;
+using Che168.Utils;
+using Che168.Cache.Data;
+using Che168.DAL.Admin.QuotePrice;
+using Che168.DAL.Admin.CarManager;
+using Che168.DAL.Admin.EditUser;
+using <%=EntityClassFullName.Split('.').ToList().Take(EntityClassFullName.Split('.').Length-1).Join(".") %>;
+using <%=DALClassFullName.Split('.').ToList().Take(DALClassFullName.Split('.').Length-1).Join(".") %>;
+
+namespace pages
+{
+    public partial class <%=queryTable.Name %> : System.Web.UI.Page 
+    {
+        public int pageindex { get { return Tools.GetRequestInt("pageindex", 1); } }
+        public int pagesize = 20;
+        protected void Page_Load(object sender, EventArgs e)
+        {
+           <%=EntityClassFullName.Split('.')[EntityClassFullName.Split('.').Length-1].Replace("Model","QueryModel") %> query = this.ToObject<<%=EntityClassFullName.Split('.')[EntityClassFullName.Split('.').Length-1].Replace("Model","QueryModel") %>>();
+           //query.Company = query.Company.UrlDecode();
+           
+            if(this.Request.Params["export"].IsNotNullOrEmptyOrBlank())
+            {
+                int rowcount = 0; 
+                var list =<%=DALClassFullName%>.GetPageData(query, pagesize, pageindex, out rowcount);
+                <% generateExport(); %>
+                string title = @"<%=exportTitle.Join(",") %>";
+                string column = @"<%=exprotColumn.Join(",") %>";
+                list.ToCsvString(this.Response, "<%=queryTable.Name %>_" + DateTime.Now.ToString("yyyyMMddHHmmss"), title, column);
+            }
+            else
+            {
+                string action = this.Request.Params["action"];
+                if (action.IsNotNullOrEmptyOrBlank())
+                {
+                    object returnobj = new { };
+                    switch (action)
+                    {
+                        case "query":
+                            {
+                                int rowcount = 0; 
+                                var list = <%=DALClassFullName%>.GetPageData(query, pagesize, pageindex, out rowcount);
+                                rpdata.DataSource = list;
+                                rpdata.DataBind();
+                                HtmlTextWriter writer = new HtmlTextWriter(new StringWriter());
+                                rpdata.RenderControl(writer);
+                                string html = writer.InnerWriter.ToString();
+                                returnobj = new { rowcount, html, totalpage = (rowcount + pagesize - 1) / pagesize };
+                            } break;
+                    }
+                    Response.Write(returnobj.ToJson());
+                    Response.End();
+                }else
+                {
+                
+                }
+            }
+        }
+    }
+}
+
+<script runat="template">
+public TableSchema queryTable;
+public ExtendsTools et;
+public int shortDescriptionLen;
+public void tablechanged(object d, System.EventArgs e) {
+    //System.Diagnostics.Debugger.Launch();  
+    //System.Diagnostics.Debugger.Break(); 
+    //Debug.WriteLine("");    
+    if (this.QuerySqlScript == null || this.QuerySqlScript.Count==0) 
+        QuerySqlScriptChange(d,e);
+}
+public void QuerySqlScriptChange(object o, System.EventArgs e) {
+    if (this.QuerySqlScript != null && this.QuerySqlScript.Count>0) {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in this.QuerySqlScript) {
+            sb.AppendLine(item);
+        }
+        this.queryTable = this.SourceDatabase.GetTableSchemaByScript(sb.ToString());
+        TableToSelectColums(this.queryTable);
+    }
+    else
+    {
+        this.queryTable=this.SourceTable;
+        TableToSelectColums(this.SourceTable);
+    }
+}
+public void TableToSelectColums(TableSchema tableSchema) {
+    if (tableSchema != null && this.SelectedTableName != tableSchema.Name) {
+        this.SelectedTableName = tableSchema.Name;
+        var newGridColumn = new Dictionary<string, bool>();
+        if (tableSchema != null)
+            foreach (var item in tableSchema.Columns) {
+            newGridColumn.Add(item.Name, true);
+        }            
+        if(GridColumn == null || GridColumn.Count!= newGridColumn.Count)
+        {               
+            GridColumn = newGridColumn;
+            outstring =  (GridColumn == null ? "null":GridColumn.Count.ToString())+"|"+newGridColumn.Count.ToString();
+        }
+    }
+}
+public string getEval(string name, string formatter = "") {
+    if (!string.IsNullOrEmpty(formatter))
+        return "<%#Eval(\"" + name + "\",\"" + formatter + "\") %>";
+    return "<%#Eval(\"" + name + "\") %>"; 
+}
+List<string> exportTitle = new List<string>();
+List<string> exprotColumn = new List<string>();
+private void generateExport(){
+    foreach (ColumnSchema item in et.MainTable.Columns.Where(c=>this.GridColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn"))
+    {
+        exportTitle.Add(ExtendsTools.ColumnSchemaExtends.GetColumnSummary(item,shortDescriptionLen));
+        exprotColumn.Add(item.Name);
+    }
+                
+}
+
+//protected override void OnPreRender() {
+
+    //throw new ApplicationException("You must either pass in an EntityElement object from a parent template or set the name of the entity.");
+    //MessageBox.Show(ColumnConfigs.TableName);
+
+    /*
+    HtmlTemplate tem = new HtmlTemplate();
+    this.CopyPropertiesTo(tem);
+    tem.MainTable = (this.IsSqlQuery? this.queryTable: this.MainTable);
+    html = tem.RenderToString();
+    */    
+//}
+</script>

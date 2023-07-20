@@ -1,0 +1,183 @@
+﻿<%-- 
+Name: 
+Author: 李丙龙 
+Description: 生成查询的sql，可选择表或者写sql查询语句
+--%>
+<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="数据源配置" Description="查询sql" Optional="True" OnChanged="QuerySqlScriptChange" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="数据源配置" Description="表选择" Optional="True" OnChanged="tablechanged" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="数据源配置" Description="字段备注来源表" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="数据源配置" Optional="True" OnChanged="QuerySqlScriptChange" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Property Name="SearchColumn" Type="Dictionary<String,bool>" Category="字段配置" Optional="True" Description="搜索条件字段" %>
+<%@ Property  Name="SelectedTableName" Type="String" Category="字段配置" Description="无需操作此字段" %>
+
+<%@ Property Name="DALClassFullName" Type="String" Category="代码配置" Description="dal类全称" %>
+<%@ Property Name="EntityClassFullName" Type="String" Category="代码配置" Description="实体类类全称" %>
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%--<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>--%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="False" %>
+<script runat="template">
+public TableSchema queryTable;
+public ExtendsTools et;
+public int shortDescriptionLen;
+public string querySql=null;
+</script>
+<%
+ shortDescriptionLen=6;
+et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+ 
+%>
+using Auto.DataHelper;
+using Auto.DataHelper.DbProviderFactory;
+using Che168.Utils;
+using Che168.Utils.DataHelper;
+using System;
+using System.Data;
+using System.Data.Common;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using <%=EntityClassFullName.Split('.').ToList().Take(EntityClassFullName.Split('.').Count()-1).Join(".") %>;
+
+namespace <%=DALClassFullName.Split('.').ToList().Take(EntityClassFullName.Split('.').Count()-1).Join(".") %>
+{
+    /// <summary>
+	/// <%=ExtendsTools.TableSchemaExtends.GetModelDescription()%>数据访问层
+	/// </summary>
+    public static partial class <%=DALClassFullName.Split('.')[DALClassFullName.Split('.').Count()-1] %>
+    {
+        /// <summary>
+	    /// <%=et.MainTable.Description%> 查询数据
+	    /// </summary>       
+        public static List<<%=et.MainTable.Name %>Model> GetPageData(<%=et.MainTable.Name %>QueryModel queryEntity,int pageSize,int pageIndex,out int rowCount)
+        {
+        <% if(querySql.IsNotNullOrEmptyOrBlank()) {%>
+            string rowCountSql = @"WITH T AS (<%=querySql%>) SELECT  COUNT(1) FROM T WITH (NOLOCK) {0}";
+            string querySql = @"WITH T AS (<%= this.querySql %>),T1 AS (SELECT * FROM T {0}) 
+                                SELECT * FROM T1  WHERE T1.rn>@beginindex AND T1.rn<=@endindex";
+        <%} else { %>
+            string rowCountSql = @"SELECT COUNT(1) FROM <%= et.MainTable.Name %> AS T WITH (NOLOCK) {0};";
+            string querySql = @"WITH T AS( SELECT <%= string.Join(",", et.MainTable.Columns.Select(c=>"T."+c.Name)) %> 
+                                <%=", ROW_NUMBER() OVER(ORDER BY T."+ this.SourceTable.Columns.Where(c=>c.IsPrimaryKeyMember).FirstOrDefault().Name +" DESC) AS rn " %>
+                                FROM <%= et.MainTable.Name %> AS T WITH (NOLOCK) {0} ) SELECT * FROM T WHERE T.rn>@beginindex AND T.rn<=@endindex";
+            <%} %>
+            List<string> whereList = new List<string>();
+            DbParameter[] par = {   
+                            <% foreach (var colume in et.MainTable.Columns.Where(c=>this.SearchColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn")){%>
+                                <%= colume.NativeType.ToLower()%>
+                                <%string columnSummary = ExtendsTools.ColumnSchemaExtends.GetColumnSummary(colume); %>
+                                <%string columnname = colume.Name.ToLower(); %>
+                                <% if(!colume.IsPrimaryKeyMember) {%>
+                                    <% if(colume.IsStringColumn()){ %>
+                                    DbParamProvider.Instance.MakeInParam("@<%=columnname %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, queryEntity.<%=columnname%> + "%"), ////<%=columnSummary %>
+                                    <%} else if(colume.IsDateColumn()) { %>
+                                    DbParamProvider.Instance.MakeInParam("@<%=columnname %>start", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, queryEntity.<%=columnname%>start ?? DateTime.Now), ////<%=columnSummary %>
+                                    DbParamProvider.Instance.MakeInParam("@<%=columnname %>end", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, (queryEntity.<%=columnname%>end ?? DateTime.Now).AddDays(1)), ////<%=columnSummary %>
+                                    <%} else {%>
+                                    DbParamProvider.Instance.MakeInParam("@<%=columnname %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, queryEntity.<%=columnname%>), ////<%=columnSummary %>
+                                    <%} %>                                    
+                                <%} %>
+                            <%}%>
+                                    DbParamProvider.Instance.MakeInParam("@beginindex", (DbType)SqlDbType.Int, 4,  (pageIndex - 1) * pageSize),
+                                    DbParamProvider.Instance.MakeInParam("@endindex", (DbType)SqlDbType.Int, 4,  pageIndex * pageSize )                                   
+                                };
+          
+          <%var searchColumn = et.MainTable.Columns.Where(c=>this.SearchColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn"); 
+            foreach(ColumnSchema colume in searchColumn){%>
+            <%string columnname = colume.Name.ToLower(); %>
+            <%if(colume.IsStringColumn()){%>
+            if(queryEntity.<%=columnname%>.IsNotNullOrEmptyOrBlank())
+                whereList.Add(" T.<%=colume.Name.ToLower()%> LIKE @<%=columnname%> ");
+            <%} else if(colume.IsDateColumn()){%>
+            if(queryEntity.<%=columnname%>start.HasValue)
+                whereList.Add(" T.<%=colume.Name%> >= @<%=columnname%>start ");
+            if(queryEntity.<%=columnname%>end.HasValue)
+                whereList.Add(" T.<%=colume.Name%> < @<%=columnname%>end ");
+            <%} else {%>
+            if(queryEntity.<%=columnname%>>0)
+                whereList.Add(" T.<%=colume.Name%> = @<%=columnname%> ");
+          <%}} %>
+            rowCountSql = rowCountSql.Formats(whereList.Count>0?" WHERE "+whereList.Join(" AND "):"");
+            rowCountSql +=@" --请输入文件路径  GetPageData";
+            rowCount = Tools.GetInt(<%= ExtendsTools.GetDbOperator(this.SourceDatabase)%>Read.ExecuteScalar(rowCountSql, CommandType.Text, par.ToArray()),0);
+            if(rowCount==0)
+               return new List<<%=et.MainTable.Name %>Model>();
+          
+            querySql = querySql.Formats(whereList.Count>0?" WHERE "+whereList.Join(" AND "):"");
+            querySql += @" --请输入文件路径  GetPageData";        
+            DataTable db = <%= ExtendsTools.GetDbOperator(this.SourceDatabase)%>Read.ExecuteDataSet(querySql, CommandType.Text, par).Tables[0];        
+            return db.ToList<<%=et.MainTable.Name %>Model>();
+        }
+
+    }
+}
+
+<script runat="template">
+public void tablechanged(object d, System.EventArgs e) {
+    //System.Diagnostics.Debugger.Launch();  
+    //System.Diagnostics.Debugger.Break(); 
+    Debug.WriteLine("fdsfds");
+    if (this.QuerySqlScript == null || this.QuerySqlScript.Count==0) 
+        QuerySqlScriptChange(d,e);
+}
+public void QuerySqlScriptChange(object o, System.EventArgs e) {
+    querySql = null;
+    if (this.QuerySqlScript != null && this.QuerySqlScript.Count>0) {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in this.QuerySqlScript) {
+            sb.AppendLine(item);
+        }
+        querySql = sb.ToString();
+        this.queryTable = this.SourceDatabase.GetTableSchemaByScript(sb.ToString());
+        TableToSelectColums(this.queryTable);
+    }
+    else
+    {        
+        this.queryTable=this.SourceTable;
+        TableToSelectColums(this.SourceTable);
+    }
+}
+public void TableToSelectColums(TableSchema tableSchema) {
+    if(tableSchema!=null && this.SelectedTableName!=tableSchema.Name)
+        this.SelectedTableName = tableSchema.Name;
+        var newsearch = new Dictionary<string, bool>();
+        if (tableSchema != null)
+            foreach (var item in tableSchema.Columns) {
+            if (item.Name.ToLower() != "rn") 
+                newsearch.Add(item.Name, !item.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase));
+        }
+        if(SearchColumn == null || SearchColumn.Count != newsearch.Count)
+        {    
+            SearchColumn = newsearch;
+            //this.SelectedTableName = (SearchColumn == null ? "null":SearchColumn.Count.ToString())+"|"+newsearch.Count.ToString();
+        }
+}
+
+//public override string GetFileName() {
+//    return "ListDAL.cs";
+//}
+
+</script>

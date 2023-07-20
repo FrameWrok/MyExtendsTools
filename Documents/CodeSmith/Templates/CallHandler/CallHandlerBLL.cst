@@ -1,0 +1,337 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Description="" ResponseEncoding="UTF-8" %>
+<%--<%@ Property Name="OldDalNamespace" Type="System.String" Category="Config" Optional="False" Description="迁移之前的DAL命名空间" %>--%>
+<%@ Property Name="DalNamespace" Type="System.String" Category="Config" Optional="True" Description="迁移后的DAL命名空间" %>
+<%@ Property Name="BLLNamespace" Type="System.String" Category="Config" Optional="False" Description="BLL命名空间" %>
+<%@ Property Name="ClassName" Type="System.String" Category="Config" Optional="False" Description="DAL类名" %>
+<%--<%@ Property Name="ModelNamspace" Type="System.String" Category="Config" Optional="False" Default="api.dealer.che168.com.Model.Dealer" Description="DAL类名" %>--%>
+<%@ Property Name="SourceAssembly" Type="System.String" Category="数据集" Optional="False" Description="数据集文件(DLL)" Editor="System.Windows.Forms.Design.FileNameEditor,System.Design" %>
+<%@ Property Name="AssemblyHelpXml" Type="System.String" Category="数据集" Optional="True" Description="数据集文件帮助文档(XML)" Editor="System.Windows.Forms.Design.FileNameEditor,System.Design" %>
+<%@ Property Name="SaveFloder" Type="System.String" Category="Config" Optional="True" Description="Handler 输出目录" Editor="System.Windows.Forms.Design.FolderNameEditor,System.Design" %>
+<%@ Property Name="FinishOpenSaveFloder" Type="System.Boolean" Category="Config" Default="True" Optional="True" Description="生成完成打开 Handler 输出目录" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System" %>
+<%@ Assembly Name="System.Windows" %>
+<%@ Assembly Name="System.Windows.Forms" %>
+<%@ Assembly Name="System.Xml" %>
+<%@ Assembly Name="System.Reflection" %>
+<%@ Assembly Name="System.Design" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml.Serialization" %>
+<%@ Import Namespace="System.Reflection" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Xml.XPath" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="HelpXmlClass.cst" Name="HelpXmlClass"  MergeProperties="True"%>
+<%
+if (SourceAssembly=="")
+    throw new ApplicationException("SourceAssembly not found.");
+if (ClassName=="")
+    throw new ApplicationException("ClassName is empty.");
+//if (OldDalNamespace=="")
+//    throw new ApplicationException("OldDalNamespace is empty.");
+//if (NewDalNamespace=="")
+//    throw new ApplicationException("NewDalNamespace is empty.");    
+    List<string> getMethodList = new List<string>(){"get","select","query"};
+%>
+using System;
+using System.Web; 
+using Che168.Utils;
+using System.Linq;
+using System.Collections.Generic;
+using com.che168.api.dealer.model;
+using com.che168.api.dealer.op;
+
+namespace <%=GetBLLNameSpace()%>
+{   
+    <% HelpXmlClass.docMember cmember = GetHelpMember(EmemberType.T,sourceClassType.FullName); 
+       StringBuilder summary = new StringBuilder();;
+       if(cmember!=null)
+       {
+           summary.AppendLine("/// <summary>");
+           if(cmember.Items.Count()>0)
+           {
+               foreach (var item in cmember.Items)
+               	{
+                     if(item!=null && !string.IsNullOrEmpty(item.ToString()))
+               		    summary.AppendLine("    /// "+item.ToString().Trim());  
+               	}                 
+           }
+           summary.Append("    /// <summary>");
+       }
+    %>
+    <%= summary.Length>0? summary.ToString():"" %>
+    public static class <%= sourceClassType.Name %>
+    {
+<% List<MethodInfo> methods= GetMethodInfos();
+   string bllMethod,baseHandlerUrl,handlerUrl,httpCallMethod;
+   baseHandlerUrl="V1/Dealer";
+   baseHandlerUrl += this.sourceClassType.Namespace.Replace("api.dealer.che168.com.dal.dealer","").Replace(".","/");
+   baseHandlerUrl += "/" + this.sourceClassType.Name + "/";
+   
+%>
+<% foreach(MethodInfo method in methods){%>
+<% List<ParameterInfo> paramerers = method.GetParameters().ToList(); %>
+<%
+    httpCallMethod = "Post";
+    string lowermethod = method.Name.ToLower();
+    foreach (var item in getMethodList)
+	{
+		 if(lowermethod.IndexOf(item) > -1)
+         {
+             httpCallMethod = "Get";
+             break;
+         }
+	} 
+    handlerUrl = baseHandlerUrl + method.Name + ".ashx";
+    Type returnType = method.ReturnType;
+    Type paramType = null;
+    bllMethod="public static "+(returnType==null ? "void":GetReturnType(returnType))+" "+ method.Name +" (";
+    foreach (var param in paramerers)
+    {
+        if(!param.IsOut)
+    	    bllMethod+="" + param.ParameterType.Name+" " + param.Name.ToLower()+", ";
+        else
+            bllMethod+="out " + param.ParameterType.Name+" " + param.Name.ToLower()+", ";
+    }
+%>      
+        
+       <% HelpXmlClass.docMember mmember = GetHelpMember(EmemberType.M,sourceClassType.FullName+"."+method.Name); 
+       summary = new StringBuilder();
+       StringBuilder paramRemark = new StringBuilder();
+       HelpXmlClass.docMemberParam memparam = new HelpXmlClass.docMemberParam();
+       if(mmember!=null)
+       {
+           summary.AppendLine("/// <summary>");
+           if(mmember.Items.Count()>0)
+           {
+               foreach (var item in mmember.Items)
+               	{
+                     if(item!=null)
+                     {  
+                        if(item is string && !string.IsNullOrEmpty(item.ToString()))
+               		        summary.AppendLine("        /// "+item.ToString().Trim());
+                        if(item is HelpXmlClass.docMemberParam)
+                        {
+                            memparam = item as HelpXmlClass.docMemberParam;
+                            if(memparam!=null)
+                                if(paramRemark.Length>0)
+                                    paramRemark.AppendLine("        /// <param name=\""+memparam.name+"\">"+memparam.Value+"</param>");
+                                else
+                                    paramRemark.AppendLine("/// <param name=\""+memparam.name+"\">"+memparam.Value+"</param>");
+                        }                        
+                     }
+               	}                 
+           }
+           summary.Append("        /// <summary>");
+           if(paramRemark.Length>0)
+               paramRemark.Append("        /// <returns></returns>");           
+           else
+               paramRemark.Append("/// <returns></returns>");           
+       }
+        %>
+        <%= summary.Length>0? summary.ToString():"" %>
+        <%= paramRemark.Length>0? paramRemark.ToString():"" %>
+        <%= bllMethod.Trim().Trim(',')+")" %>
+        {
+            Dictionary<object, object> param = new Dictionary<object, object>(){};
+            <%
+            foreach (var param in paramerers)
+            {%>
+                <% if(!param.IsOut) %>
+                <%{ %>
+            param.Add("<%= param.Name%>", <%= param.Name.ToLower() %>);    
+                <%} %>            
+            <%}%>
+            var returnObj = new ApiDealerOp(new RequestContext()
+            {
+                Url = "<%=handlerUrl%>",
+                DicParam = param,
+                Method = HttpMethodEnum.<%=httpCallMethod %>
+            }).<%=GetReturnMethod(returnType)%>();
+            if(returnObj.code == 0)
+            {
+                 return returnObj.result ;<%--<%=GetReturnCode(returnType) %>;            --%>
+            }
+            return <%=GetReturnTypeDefault(returnType)%>;
+        }
+<%} %>
+    }
+}
+
+<script runat="template">
+private Type int16type = typeof(System.Int16);
+private Type int32type = typeof(System.Int32);
+private Type int64type = typeof(System.Int64);
+private Type decimaltype = typeof(System.Decimal);
+private Type doubletype = typeof(System.Double);
+private Type stringtype = typeof(string);
+private Type boolType = typeof(Boolean);
+private Type datetimetype = typeof(DateTime);
+private Type listIntType = typeof(List<Int32>);
+private Type listStringType = typeof(List<string>);
+private Type datatableType = typeof(DataTable);
+private Type datarowType = typeof(DataRow);
+private Type sourceClassType;
+private HelpXmlClass.doc Doc;
+public List<MethodInfo> GetMethodInfos()
+{
+    InitBLLConfig();    
+    List<string> removeList = new List<string>(){ "GetType", "GetHashCode", "Equals", "ToString" };
+    List<MethodInfo> mlist = sourceClassType.GetMethods(BindingFlags.Public|BindingFlags.Static|BindingFlags.Instance).ToList().Where(p=> !removeList.Contains(p.Name)).OrderBy(p=>p.Name).ToList();
+    return mlist;
+}
+public void InitBLLConfig()
+{    
+    if(sourceClassType==null)
+    {
+        System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(this.SourceAssembly);        
+        var types = assembly.GetTypes().ToList();
+        string cname =(string.IsNullOrEmpty( this.DalNamespace)? "" : this.DalNamespace.Trim() + "." ) + this.ClassName.Trim();        
+        if(!types.Exists(p=>p.Name == cname || p.FullName==cname))
+            throw new ApplicationException("class "+cname+" is not found.");
+        //System.Windows.Forms.MessageBox.Show("1");
+        if(types.Where(p=>p.Name == cname || p.FullName==cname).Count()>1)
+            throw new ApplicationException("class "+cname+" is too much. Please enter DalNameSpace.");                
+        sourceClassType = types.Where(p=>p.Name == cname || p.FullName==cname).FirstOrDefault();                
+        if(sourceClassType == null)
+            throw new ApplicationException("class "+this.DalNamespace+"."+this.ClassName+" is not found.");
+        if(Doc == null && !string.IsNullOrEmpty(this.AssemblyHelpXml))
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(HelpXmlClass.doc));
+            Doc = (HelpXmlClass.doc)serializer.Deserialize(File.Open(this.AssemblyHelpXml, FileMode.Open));
+        }
+    }
+    
+}
+public string GetBLLNameSpace()
+{
+    InitBLLConfig();
+    return BLLNamespace + sourceClassType.FullName.Replace("api.dealer.che168.com.dal.dealer","");
+}
+public string GetReturnCode(Type returnType)
+{
+    string returnCode = "";
+    if(returnType == int16type)
+        returnCode = "Convert.ToInt16(returnObj.result)";
+    if(returnType == int32type)
+        returnCode = "Convert.ToInt32(returnObj.result)";
+    if(returnType == int64type)
+        returnCode = "Convert.ToInt64(returnObj.result)";
+    if(returnType == decimaltype)
+        returnCode = "Convert.ToDecimal(returnObj.result)";
+    if(returnType == doubletype)
+        returnCode = "Convert.ToDouble(returnObj.result)";
+    if(returnType == boolType)
+        returnCode = "returnObj.result.ToBoolean()";
+    if(returnType == datetimetype)
+        returnCode = "Convert.ToDateTime(returnObj.result)";
+    if(returnType == stringtype)
+        returnCode = "returnObj.result";
+    if(returnType == listIntType)
+        returnCode = "(List<Int32>)returnObj.ConvertTo(typeof(List<Int32>))";    
+    if(returnType == listStringType)
+        returnCode = "(List<string>)returnObj.ConvertTo(typeof(List<string>))";
+    if(returnType == datatableType)
+        returnCode = "returnObj.result.ToObject<typeof(List<Dictionary<string,object>>)()";    
+    return returnCode;   
+}
+public string GetReturnType(Type returnType)
+{   
+    string returnCode= returnType.Name;
+    if(returnType == listIntType)
+        returnCode = "List<Int32>";    
+    if(returnType == listStringType)
+        returnCode = "List<string>";
+    if(returnType == datatableType)
+        return "List<Dictionary<string,object>>";  
+    if(returnType == datarowType)
+        returnCode = "Dictionary<string,object>";  
+    return returnCode;
+}
+public string GetReturnMethod(Type returnType)
+{
+    string method= "ExecuteObject";    
+    if(returnType == datatableType)
+        return "ExecuteDictionary";      
+    return method+"<"+GetReturnType(returnType)+">";
+}
+public string GetReturnTypeDefault(Type returnType)
+{
+    string returnCode = "";
+    if(returnType == int16type)
+        returnCode = "0";
+    if(returnType == int32type)
+        returnCode = "0";
+    if(returnType == int64type)
+        returnCode = "0";
+    if(returnType == decimaltype)
+        returnCode = "0";
+    if(returnType == doubletype)
+        returnCode = "0";
+    if(returnType == boolType)
+        returnCode = "false";
+    if(returnType == datetimetype)
+        returnCode = "DateTime.Now";
+    if(returnType == stringtype)
+        returnCode = "null";
+    if(returnType == listIntType)
+        returnCode = "null";    
+    if(returnType == listStringType)
+        returnCode = "null";
+    if(returnType == datatableType)
+        returnCode = "null";    
+    if(returnType == datarowType)
+        returnCode = "null";
+    return returnCode; 
+}
+public HelpXmlClass.docMember GetHelpMember(EmemberType memberType,string name)
+{
+    string memberTypeName = Enum.GetName(typeof(EmemberType),memberType);
+    name = memberTypeName+":"+name;
+//    System.Windows.Forms.MessageBox.Show((Doc==null).ToString());
+    
+    if(Doc != null)
+    {
+        if(memberType == EmemberType.T)
+            return Doc.members.Where(p=>p.name==name).FirstOrDefault();
+        if(memberType == EmemberType.M)
+            return Doc.members.Where(p=>p.name.StartsWith(name+"(") || p.name==name).FirstOrDefault();
+        return Doc.members.Where(p=>p.name==name).FirstOrDefault();
+    }
+    return null;
+    
+    //XmlDocument xmldoc = new XmlDocument();
+    //xmldoc.load
+}
+public enum EmemberType{
+    T,//类 Class
+    M,// 方法 Method
+    P,//属性 Property
+    F//字段 Field
+}
+public override void Render(TextWriter writer)
+{
+    if(!string.IsNullOrEmpty(SaveFloder))
+    {
+        InitBLLConfig();
+        StreamWriter fileWriter = new StreamWriter(SaveFloder+"/"+sourceClassType.Name+".cs", false);        
+        this.Response.AddTextWriter(fileWriter);
+        base.Render(writer);
+        fileWriter.Close();
+        if(FinishOpenSaveFloder)
+            System.Diagnostics.Process.Start(SaveFloder);
+    }
+    else base.Render(writer);        
+}
+</script>

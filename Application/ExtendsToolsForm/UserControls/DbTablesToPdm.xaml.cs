@@ -29,7 +29,8 @@ namespace ExtendsToolsForm.UserControls
     {
         public ObservableCollection<DbTableModels> dbExclueList = new ObservableCollection<DbTableModels>();
         public ObservableCollection<DbTableModels> dbInclueList = new ObservableCollection<DbTableModels>();
-        public string sqlconnection = "", filename = "";
+        public string saveFolder = "", chmFilePath = "", bussinessName = "";
+        public DbConnectionModel sqlconnection { get; set; }
         public DbTablesToPdm()
         {
             InitializeComponent();
@@ -48,8 +49,8 @@ namespace ExtendsToolsForm.UserControls
         /// <param name="e"></param>
         private void btnFilterDb_Click(object sender, RoutedEventArgs e)
         {
-            string sqlconnection = getSqlConnection();
-            var tableList = DbSchemaBLL.GetDbTablesList(this.txtDbLikeName.Text.Trim(), getSqlConnection());
+            getSqlConnection();
+            var tableList = DbSchemaBLL.GetDbTablesList(this.txtDbLikeName.Text.Trim(), sqlconnection.ToString());
             if (tableList.Count == 0)
             {
                 MessageBox.Show("未查询到符合条件的表！");
@@ -90,7 +91,7 @@ namespace ExtendsToolsForm.UserControls
                 dbExclueList.Remove(item);
             }
         }
-        
+
         /// <summary>
         /// 移除
         /// </summary>
@@ -144,16 +145,39 @@ namespace ExtendsToolsForm.UserControls
 
         #endregion
 
-        public string getSqlConnection()
+        public DbConnectionModel getSqlConnection()
         {
-            return sqlconnection = "Data Source={0};Persist Security Info=True;User ID={1};Password={2};Initial Catalog={3};".Formats(this.dbhost.Text.Trim(), this.dbuser.Text.Trim(), this.dbpwd.Text.Trim(), this.dbname.Text.Trim());
+            return sqlconnection = new DbConnectionModel() { host = this.dbhost.Text.Trim(), dbname = this.dbname.Text.Trim(), pwd = this.dbpwd.Text.Trim(), user = this.dbuser.Text.Trim() };
         }
 
         #region 生成chm
+
+        private void BtnSelectFloder_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                saveFolder = folderDialog.SelectedPath.TrimEnd('\\', '/') + "\\";
+                this.txtSaveFolder.Text = saveFolder + (this.txtBussinessName.Text.Trim().Length > 0 ? this.txtBussinessName.Text.Trim() + ".chm" : "");
+            }
+        }
+        private void txtBussinessName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (this.txtSaveFolder.Text.Trim().Length > 0)
+            {
+                this.txtSaveFolder.Text = saveFolder + (this.txtBussinessName.Text.Trim().Length > 0 ? this.txtBussinessName.Text.Trim() + ".chm" : "");
+            }
+        }
+
+        /// <summary>
+        /// 生成chm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnGenerateDbToChm_Click(object sender, RoutedEventArgs e)
         {
-            sqlconnection = getSqlConnection();
-            filename = this.txtFileName.Text.Trim();
+            chmFilePath = this.txtSaveFolder.Text.Trim();
+            bussinessName = this.txtBussinessName.Text.Trim();
             new Thread(new ParameterizedThreadStart(this.CrateCHM)) { IsBackground = true }.Start(dbInclueList);
         }
 
@@ -164,21 +188,21 @@ namespace ExtendsToolsForm.UserControls
                 if (phs == null)
                     return;
 
-                ObservableCollection<DbTableModels> tablelist = phs as  ObservableCollection<DbTableModels>;
+                ObservableCollection<DbTableModels> tablelist = phs as ObservableCollection<DbTableModels>;
 
                 var lstTabs = GetTables(tablelist);
-                string defaultpage = filename + ".html";
-                string fullPath = System.IO.Path.GetFullPath("tmp");
+                string defaultpage = bussinessName + ".html";
 
-                if (!Directory.Exists(fullPath))
-                    Directory.CreateDirectory(fullPath);
+                string fullrootPath = System.IO.Path.GetFullPath(saveFolder + "tmp");
+                if (!Directory.Exists(fullrootPath))
+                    Directory.CreateDirectory(fullrootPath);
                 else
                 {
-                    Directory.Delete(fullPath, true);
-                    Directory.CreateDirectory(fullPath);
+                    Directory.Delete(fullrootPath, true);
+                    Directory.CreateDirectory(fullrootPath);
                 }
-                ChmHtmlHelper.CreateDirHtml(filename, lstTabs, System.IO.Path.Combine(fullPath, defaultpage));
-                fullPath = System.IO.Path.GetFullPath("tmp\\表结构");
+                ChmHtmlHelper.CreateDirHtml(bussinessName, lstTabs, System.IO.Path.Combine(fullrootPath, defaultpage));
+                string fullPath = System.IO.Path.GetFullPath(fullrootPath + "\\" + bussinessName);
                 if (!Directory.Exists(fullPath))
                 {
                     Directory.CreateDirectory(fullPath);
@@ -188,14 +212,16 @@ namespace ExtendsToolsForm.UserControls
                 chmHelp.DefaultPage = defaultpage;
 
 
-                chmHelp.Title = filename;
-
+                chmHelp.Title = bussinessName;
                 chmHelp.ChmFileName = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), chmHelp.Title + ".chm");
-                chmHelp.SourcePath = "tmp";
+                if (bussinessName.IsNotNullOrEmptyOrBlank())
+                    chmHelp.ChmFileName = System.IO.Path.Combine(chmFilePath);
+
+                chmHelp.SourcePath = fullrootPath;
                 chmHelp.Compile();
-                this.txtDbToChmFile.Dispatcher.Invoke(() =>
+                this.txtSaveFolder.Dispatcher.Invoke(() =>
                 {
-                    this.txtDbToChmFile.Text = chmHelp.ChmFileName;
+
                 });
 
                 MessageBox.Show("生成成功！文件路径：" + chmHelp.ChmFileName);
@@ -205,13 +231,14 @@ namespace ExtendsToolsForm.UserControls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private IList<PdmTableInfoModel> GetTables(ObservableCollection<DbTableModels> tableLists)
         {
             List<PdmTableInfoModel> list = new List<PdmTableInfoModel>();
             foreach (var item in tableLists)
             {
                 string tableName, tableDescription;
-                List<DbTableColumnSchema> dbColumnList = DbSchemaBLL.GetDbTableColumnSchema(item.Name, item.sqlconnection, out tableName, out tableDescription);
+                List<DbTableColumnSchema> dbColumnList = DbSchemaBLL.GetDbTableColumnSchema(item.Name, item.sqlconnection.ToString(), out tableName, out tableDescription);
                 if (dbColumnList == null)
                 {
                     throw new Exception("table {0} 不存在,请确认表名及数据库名是否正确！".Formats(item.Name));
@@ -238,7 +265,7 @@ namespace ExtendsToolsForm.UserControls
                 list.Add(tbmodel);
             }
             return list;
-        }        
+        }
 
         public string GetDataType(DbTableColumnSchema column)
         {
@@ -255,5 +282,7 @@ namespace ExtendsToolsForm.UserControls
         }
 
         #endregion
+
+
     }
 }

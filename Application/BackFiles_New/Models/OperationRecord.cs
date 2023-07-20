@@ -10,6 +10,7 @@ namespace BackFiles_New.Models
         internal string BasePath { get; set; }
         internal string FileList { get; set; }
         internal string RootPath { get; set; }
+        internal string MainPackage { get; set; }
     }
 }
 

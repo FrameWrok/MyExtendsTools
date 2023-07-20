@@ -10,7 +10,7 @@ namespace FrameWork.Core
     /// <summary>
     /// 应用程序调用框架底层类
     /// </summary>
-   public static class ApplicationDataCommon
+    public static class ApplicationDataCommon
     {
         /// <summary>
         /// 操作数据库类
@@ -185,14 +185,15 @@ namespace FrameWork.Core
             /// </summary>
             /// <param name="connectionString">数据库连接字符串</param>
             /// <param name="sqlSentence">sql查询语句</param>
-            /// <param name="commandType">sql语句类型，是存储过程还是sql语句</param>
-            /// <param name="dataSet">要填充的 DataSet</param>        
+            /// <param name="commandType">sql语句类型，是存储过程还是sql语句</param>             
             /// <param name="listParameter">参数列表</param>
             /// <param name="smartDataBaseType">数据库类型</param>
             /// <param name="tableName">填充的表名称</param>
-            public static void Fill(string connectionString, string sqlSentence, CommandType commandType, DataSet dataSet, List<DbParameter> listParameter, FrameData.DataBaseType smartDataBaseType, string tableName)
+            public static DataSet Fill(string connectionString, string sqlSentence, CommandType commandType, List<DbParameter> listParameter, FrameData.DataBaseType smartDataBaseType, string tableName)
             {
+                DataSet dataSet = new DataSet();
                 FrameWork.Core.DataCommon.Fill(connectionString, sqlSentence, commandType, dataSet, listParameter, smartDataBaseType, tableName);
+                return dataSet;
             }
 
             /// <summary>
@@ -204,9 +205,11 @@ namespace FrameWork.Core
             /// <param name="dataSet">要填充的 DataSet</param>        
             /// <param name="listParameter">参数列表</param>
             /// <param name="tableName">填充的表名称</param>
-            public static void Fill(string sqlSentence, CommandType commandType, DataSet dataSet, List<DbParameter> listParameter, string tableName)
+            public static DataSet Fill(string sqlSentence, CommandType commandType, List<DbParameter> listParameter, string tableName)
             {
+                DataSet dataSet = new DataSet();
                 FrameWork.Core.DataCommon.Fill(DataBaseConnectionString, sqlSentence, commandType, dataSet, listParameter, FrameDataBaseType, tableName);
+                return dataSet;
             }
 
             /// <summary>
@@ -218,9 +221,11 @@ namespace FrameWork.Core
             /// <param name="dataSet">要填充的 DataSet</param>          
             /// <param name="smartDataBaseType">数据库类型</param>
             /// <param name="tableName">填充的表名称</param>
-            public static void Fill(string connectionString, string sqlSentence, CommandType commandType, DataSet dataSet, FrameData.DataBaseType smartDataBaseType, string tableName)
+            public static DataSet DataSet(string connectionString, string sqlSentence, CommandType commandType, FrameData.DataBaseType smartDataBaseType, string tableName)
             {
+                DataSet dataSet = new DataSet();
                 FrameWork.Core.DataCommon.Fill(connectionString, sqlSentence, commandType, dataSet, smartDataBaseType, tableName);
+                return dataSet;
             }
 
             /// <summary>
@@ -231,9 +236,12 @@ namespace FrameWork.Core
             /// <param name="commandType">sql语句类型，是存储过程还是sql语句</param>
             /// <param name="dataSet">要填充的 DataSet</param> 
             /// <param name="tableName">填充的表名称</param>
-            public static void Fill(string sqlSentence, CommandType commandType, DataSet dataSet, string tableName)
+            public static DataSet Fill(string sqlSentence, CommandType commandType, string tableName)
             {
+                DataSet dataSet = new DataSet();
                 FrameWork.Core.DataCommon.Fill(DataBaseConnectionString, sqlSentence, commandType, dataSet, FrameDataBaseType, tableName);
+                return dataSet;
+
             }
 
             /// <summary>
@@ -247,9 +255,12 @@ namespace FrameWork.Core
             /// <param name="smartMappingType">映射方式</param>
             /// <param name="smartDataBaseType">数据库类型</param>
             /// <param name="tableName">填充的表名称</param>
-            public static void Fill(string connectionString, string sqlSentence, CommandType commandType, DataSet dataSet, object item, FrameMappingType smartMappingType, FrameData.DataBaseType smartDataBaseType, string tableName)
+            public static DataSet Fill(string connectionString, string sqlSentence, CommandType commandType, object item, FrameMappingType smartMappingType, FrameData.DataBaseType smartDataBaseType, string tableName)
             {
+                DataSet dataSet = new DataSet();
                 FrameWork.Core.DataCommon.Fill(connectionString, sqlSentence, commandType, dataSet, item, smartMappingType, smartDataBaseType, tableName);
+                return dataSet;
+
             }
 
             /// <summary>

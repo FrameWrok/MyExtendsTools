@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <script language="javascript" type="text/javascript" src="../Core/Script/SmartBase.js"></script>
+
+    <script type="text/javascript" language="javascript">
+        function abc(e) {
+            var q = new Class("om");
+            q.extend({
+                aler: function() {
+                    alert(456);
+                }
+            });
+            var eLeft = system.getDomLeft(e);
+            var eTop = system.getDomTop(e) + e.offsetHeight;
+            winShow(eLeft, eTop);
+        }
+        function winShow(left, top) {
+            var win = document.getElementById("win");
+            win.style.left = left ;
+            win.style.top = top;
+            win.style.display = "inline";
+        }
+
+
+        function dd() {
+            window.setTimeout(abc.createCallBack("code", "123"), 3000);
+            alert(system.isNumber(123));
+            
+        }
+        
+    </script>
+
+</head>
+<body>
+    
+        <div style="width: 400px; height: 200px; background-color: Aqua;">
+            <table width="100%" style="background-color: White; height: 40px; border-color: Red;
+                border-style: solid; border: 1px;">
+                <tbody>
+                    <tr>
+                        <td align="right">
+                            <div style="float: left;">
+                                <div>
+                                    <input type="button" value="test" style="float: left; width: 60px; cursor: pointer;
+                                        background-color: Aqua; vertical-align: middle;" onclick="abc()" />
+                                    <input type="text" onclick="abc(this)" style="width: 100px; float: left;" />
+                                </div>
+                                <table style="background-color: Gray;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="background-color: Transparent;">
+                                                123123
+                                            </td>
+                                            <td>
+                                                33423
+                                            </td>
+                                            <td style="padding-left: 3px;">
+                                                <input id="btnChangeView" type="button" value="切换汇总" style="float: left; margin-left: 10px;"
+                                                    onclick="dd()" />
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="win" style="width: 200px; background-color: Blue; filter:alpha(Opacity=80); position:absolute; display:none;
+            height: 200px; z-index: 10000;">
+        </div>
+    
+</body>
+</html>

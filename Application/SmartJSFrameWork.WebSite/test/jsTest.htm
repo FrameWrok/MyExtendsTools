@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title></title>
+    <script language="javascript" type="text/javascript" src="Core/Script/SmartBase.js">
+        
+    </script>
+    <script language="javascript" type="text/javascript">        
+        function test2(f) {
+            var str = "adfafdsafsfsdfsd";
+            var q = str.replace("afs", function(reg,index,sources) {
+                var s = "---";
+                return s;
+            });
+        }
+        var qq = "7777";
+        function test1() {
+            alert(this.qq);
+        }
+
+        var counter = 0;
+        var state=true;
+        function unitDiv() { }
+        unitDiv.prototype.creatediv = function() {
+        var div = document.createElement("div");
+                    
+            div.style.background = "#ffff00";
+            div.id = counter++;
+            document.body.appendChild(div);
+            return div;
+        }
+        var divutl = new unitDiv();
+        Thread = function() { };
+        Thread.prototype.start = function(t) {
+            var div = divutl.creatediv();
+            if (div.id >= 10) {
+                div.innerHTML = "只允许同时允许10个线程";
+                return;
+            }
+            var num = div.id;
+            setInterval(function() { if(this.state == true){ div.innerHTML = "第" + div.id + "个线程运行中....." + (num++)} }, t);            
+        }
+        function addThread(t) {
+            var thread = new Thread();
+            thread.start(t);
+        }
+        function setThread(e) {
+            this.state = !this.state;
+            e.value = this.state ? "停止" : "开始";
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="test" onclick="javascript:alert(123)" />
+
+<input type="button" value="test2" onclick="test1()" />
+<input type="button" value="test3" onclick="test1('789','aaa')" />
+<input type="button" value="test4" onclick="test2('d','4')" />
+<input type="button" value="添加线程" onclick="addThread(100)" />
+<input type="button" value="添加线程" onclick="addThread(50)" />
+<input type="button" value="添加线程" onclick="addThread(10)" />
+<input type="button" value="添加线程" onclick="addThread(2)" />
+<input type="button" value="停止" onclick="setThread(this)" />
+<div width="300px" background="black"  height="200px">
+<div  width="100px" background="red" height="200px"></div>
+<div  width="100px" background="green"  height="200px"></div>
+</div>
+</body>
+</html>

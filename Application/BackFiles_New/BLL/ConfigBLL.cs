@@ -12,11 +12,10 @@ namespace BackFiles_New.BLL
     /// </summary>
     public static class ConfigBLL
     {
-        static DataContractJsonSerializer serializer = null;
-        static string jsonConfigPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\LiBingLong_SmartTools\applicationConfig.json", System.Configuration.ConfigurationManager.AppSettings["applicationConfigPath"] ?? "");
+        //static string jsonConfigPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\LiBingLong_SmartTools\applicationConfig.json", System.Configuration.ConfigurationManager.AppSettings["applicationConfigPath"] ?? "");
+        static string jsonConfigPath = AppDomain.CurrentDomain.BaseDirectory + @"NewBackFileConfig.json";
         static ConfigBLL()
         {
-            serializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
             if (!File.Exists(jsonConfigPath))
             {
                 InitConfig();
@@ -25,24 +24,20 @@ namespace BackFiles_New.BLL
 
         private static void InitConfig(Dictionary<string, string> dic = null)
         {
-            Stream stream = File.Create(jsonConfigPath);
-            serializer.WriteObject(stream, dic ?? new Dictionary<string, string>());
-            stream.Close();
+            File.Delete(jsonConfigPath);
+            File.WriteAllText(jsonConfigPath, fastJSON.JSON.ToJSON(dic));
             var file = new FileInfo(jsonConfigPath);
             file.Attributes = FileAttributes.Hidden;
         }
         private static Dictionary<string, string> GetConfigDictionary()
         {
-            var stream = File.OpenRead(jsonConfigPath);
             try
             {
-                Dictionary<string, string> config = (Dictionary<string, string>)serializer.ReadObject(stream);
-                stream.Close();
-                return config;
+                string stringconfig = File.ReadAllText(jsonConfigPath);
+                return fastJSON.JSON.ToObject<Dictionary<string, string>>(stringconfig)??new Dictionary<string, string>();
             }
             catch (Exception ex)
             {
-                stream.Close();
                 InitConfig();
                 return GetConfigDictionary();
             }
@@ -61,7 +56,8 @@ namespace BackFiles_New.BLL
             {
                 string keyconfig = dic[key.ToLower()];
                 byte[] buffer = Convert.FromBase64String(keyconfig);
-                return (T)(new DataContractJsonSerializer(typeof(T)).ReadObject(new MemoryStream(buffer)));
+                keyconfig = Encoding.UTF8.GetString(buffer);
+                return fastJSON.JSON.ToObject<T>(keyconfig);
             }
             return default(T);
         }
@@ -75,10 +71,7 @@ namespace BackFiles_New.BLL
         public static void SaveConfig<T>(T t, string key)
         {
             Dictionary<string, string> dic = GetConfigDictionary();
-
-            MemoryStream stream = new MemoryStream();
-            new DataContractJsonSerializer(typeof(T)).WriteObject(stream, t);
-            string configString = Convert.ToBase64String(stream.GetBuffer());
+            string configString = Convert.ToBase64String(Encoding.UTF8.GetBytes(fastJSON.JSON.ToJSON(t)));
 
             if (dic.ContainsKey(key.ToLower()))
                 dic[key.ToLower()] = configString;

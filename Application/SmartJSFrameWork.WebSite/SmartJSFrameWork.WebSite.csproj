@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A3896DEA-8243-493D-A28C-14B1FB1ADE23}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmartJSFrameWork.WebSite</RootNamespace>
+    <AssemblyName>SmartJSFrameWork.WebSite</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <UseIISExpress>false</UseIISExpress>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Web.Mobile" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Core\MiniScript\SmartBase.js" />
+    <Content Include="Core\Script\SmartBase.js" />
+    <Content Include="Core\Script\数据采集\install_up_beacon.js" />
+    <Content Include="Core\Script\SmartCore.js" />
+    <Content Include="Core\Script\数据采集\up_beacon.js" />
+    <Content Include="crypto\Barrett.js" />
+    <Content Include="crypto\Base64Tool.js" />
+    <Content Include="crypto\BigInt.js" />
+    <Content Include="crypto\RSA.js" />
+    <Content Include="Default.aspx" />
+    <Content Include="JS\ExtendsToos.js" />
+    <Content Include="JS\jquery-1.11.3.min.js" />
+    <Content Include="JS\jquery.easyui.min-1.5.1.js" />
+    <Content Include="JS\jquery.linq.min.js" />
+    <Content Include="WebForm1.aspx" />
+    <None Include="JS\linq-vsdoc.js" />
+    <Content Include="JS\outlook2.js" />
+    <Content Include="LoginNew.aspx" />
+    <Content Include="Resouces\Barrett.js" />
+    <Content Include="Resouces\BigInt.js" />
+    <Content Include="Resouces\jquery-1.4.1-vsdoc.js" />
+    <Content Include="Resouces\jquery-1.5.1.js" />
+    <Content Include="Resouces\jquery-1.5.1.min.js" />
+    <Content Include="Resouces\RSA.js" />
+    <Content Include="Resouces\security.js" />
+    <Content Include="Resouces\taobao\login.html" />
+    <Content Include="Resouces\taobao\md5.js" />
+    <Content Include="Resouces\taobao\password.js" />
+    <Content Include="Resouces\taobao\taobao_pwdintensity.js" />
+    <Content Include="Resouces\taobao\us.js" />
+    <Content Include="Resouces\taobao\信息.txt" />
+    <Content Include="test\EventTest.htm" />
+    <Content Include="test\HTMLPage1.htm" />
+    <Content Include="test\HTMLPage2.htm" />
+    <Content Include="test\JqueryTest\HTMLPage1.htm" />
+    <Content Include="test\jsOnClickTest.htm" />
+    <Content Include="test\jsTest.htm" />
+    <Content Include="test\divtest.htm" />
+    <Content Include="test\EventCatch.htm" />
+    <Content Include="test\stopEvent.htm" />
+    <Content Include="test\testbeacon.htm" />
+    <Content Include="test\trClickTest.htm" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Code\RequestFilter.cs" />
+    <Compile Include="App_Code\ResponseFilter.cs" />
+    <Compile Include="Default.aspx.cs">
+      <SubType>ASPXCodeBehind</SubType>
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="GetKey.cs" />
+    <Compile Include="LoginNew.aspx.cs">
+      <DependentUpon>LoginNew.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LoginNew.aspx.designer.cs">
+      <DependentUpon>LoginNew.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login_aspx_cs_ADAuthManager.cs" />
+    <Compile Include="Login_aspx_cs_RSACrypto.cs" />
+    <Compile Include="Login_aspx_cs_StringHelper.cs" />
+    <Compile Include="PageAuth.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebForm1.aspx.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebForm1.aspx.designer.cs">
+      <DependentUpon>WebForm1.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartExtends\SmartExtends.csproj">
+      <Project>{6d83018f-b6ff-487e-b968-bab531fec5f5}</Project>
+      <Name>SmartExtends</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestSmartFrameWork\TestSmartFrameWork.csproj">
+      <Project>{0b49a5fd-b590-43e9-b21c-d63d9bbdb048}</Project>
+      <Name>TestSmartFrameWork</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>3928</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

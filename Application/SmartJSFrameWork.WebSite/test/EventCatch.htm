@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        div *
+        {
+            display: block;
+            margin: 4px;
+            padding: 4px;
+            border: 1px solid white;
+        }
+        .redBorder
+        {
+            border: 1px solid red;
+        }
+        .noBorder
+        {
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">
+        <ul id="container1">
+            <li><a href="#"><span id='target1'>暮色苍茫看劲松， </span></a></li>
+            <li><a href="#"><span id='target2'>乱云飞渡仍从容。 </span></a></li>
+            <li><a href="#"><span id='target3'>天生一个仙人洞， </span></a></li>
+            <li><a href="#"><span id='target4'>无限风光在险峰。 </span></a></li>
+        </ul>
+    </div>
+    <div id="logger">
+        &nbsp;</div>
+<div id="abc"></div>
+    <script language="javascript" type="text/javascript">
+        var $ = function(id) {
+            return document.getElementById(id);
+        }
+        function intercept() {
+            var logger = $('logger');
+            var container1 = $('div1');
+            //标准监听事件
+            if (document.addEventListener) {
+                container1.addEventListener("mouseover", function(e) {
+                    this.className = 'redBorder';
+                    logger.innerHTML = "鼠标进入:" + this.nodeName;          //这样就会把事件“私吞”掉啦
+                    //e.stopPropagation();
+                }, true);
+                container1.addEventListener("mouseout", function(e) {
+                    this.className = 'noBorder';
+                    logger.innerHTML = "鼠标退出:" + this.nodeName;
+                }, true);
+                var target1 = $('target1');
+                target1.addEventListener("mouseover", function(e) {
+                    this.className = 'redBorder';
+                    logger.innerHTML = "鼠标进入:" + this.nodeName;
+                }, true);
+                target1.addEventListener("mouseout", function(e) {
+                    this.className = 'noBorder';
+                    logger.innerHTML = "鼠标退出:" + this.nodeName;
+                }, true);
+            } //IE监听事件
+            else if (document.attachEvent) {
+                container1.attachEvent("onmouseover", function(e) {
+                    container1.className = 'redBorder';
+                    logger.innerHTML = "鼠标进入:" + container1.nodeName;          //这样就会把事件“私吞”掉啦
+                    e.cancelBubble = true
+                }, true);
+                container1.attachEvent("onmouseout", function(e) {
+                    container1.className = 'noBorder';
+                    logger.innerHTML = "鼠标退出:" + container1.nodeName;
+                }, true);
+                var target1 = $('target1');
+                target1.attachEvent("onmouseover", function(e) {
+                    target1.className = 'redBorder';
+                    logger.innerHTML = "鼠标进入:" + target1.nodeName;
+                    $("abc").innerHTML = logger.innerHTML;
+                }, true);
+                target1.attachEvent("onmouseout", function(e) {
+                    target1.className = 'noBorder';
+                    logger.innerHTML = "鼠标退出:" + target1.nodeName;
+                    $("abc").innerHTML = logger.innerHTML;
+                }, true);
+            }
+        }
+        window.onload = function() { intercept(); }  
+    </script>
+
+</body>
+</html>

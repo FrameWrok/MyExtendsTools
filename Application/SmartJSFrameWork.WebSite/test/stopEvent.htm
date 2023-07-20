@@ -1,0 +1,131 @@
+﻿<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>事件冒泡示例</title>
+    <style type="text/css">
+        div *
+        {
+            display: block;
+            margin: 4px;
+            padding: 4px;
+            border: 1px solid white;
+        }
+        li
+        {
+            width: 200px;
+        }
+        .redBorder
+        {
+            border: 1px solid red;
+        }
+        .noBorder
+        {
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div id="div1">
+        <ul>
+            <li><a href="#"><span>暮色苍茫看劲松，</span></a></li>
+            <li><a href="#"><span>乱云飞渡仍从容。</span></a></li>
+            <li><a href="#"><span>天生一个仙人洞，</span></a></li>
+            <li><a href="#"><span>无限风光在险峰。</span></a></li>
+        </ul>
+    </div>
+    <div id="logger">
+        &nbsp;</div>
+    <!--          <button id="btn1" onclick="enableBubble()">启用冒泡</button>           -->
+    <button id="btn2" onclick="disableBubble()">
+        禁用冒泡</button>
+</body>
+</html>
+
+<script language="javascript" type="text/javascript">
+    var $ = function(id) {
+        return document.getElementById(id);
+    }
+    function enableBubble() {
+        var div = $('div1');
+        var logger = $('logger');
+        var els = div.getElementsByTagName('*');
+        var fn1 = function(e) {
+        var ee = (e.target || e.srcElement || window.event.srcElement);
+            var element = this;
+            if (!this.outerHTML)
+                element = (e.srcElement || window.event.srcElement);
+            element.className = 'redBorder';
+            logger.innerHTML = "鼠标进入:" + ee.nodeName;
+        }
+        var fn2 = function(e) {
+            var ee = (e.target || e.srcElement || window.event.srcElement);
+            var element = this;
+            if (!this.outerHTML)
+                element = (e.srcElement || window.event.srcElement);
+            element.className = 'noBorder';
+            logger.innerHTML = '';
+        }
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            if (window.addEventListener) {
+                el.addEventListener("mouseover", fn1, false);
+                el.addEventListener("mouseout", fn2, false);
+            }
+            else {
+
+                el.attachEvent("onmouseover", fn1, false);
+                el.attachEvent("onmouseout", fn2, false);
+            }
+        }
+    }
+    function disableBubble() {
+        var div = $('div1');
+        var logger = $('logger');
+        var els = div.getElementsByTagName('*');
+        var fn1 = function(e) {
+            var ee = (e.target || e.srcElement || window.event.srcElement);
+            ee.className = 'redBorder';
+            logger.innerHTML = "鼠标进入:" + ee.nodeName;
+            if (window.addEventListener) {
+                e.stopPropagation();
+            } else if (window.event) {
+                window.event.cancelBubble = true;
+            }
+        }
+        var fn2 = function(e) {
+            var ee = (e.target || e.srcElement || window.event.srcElement);
+            ee.className = 'noBorder';
+            logger.innerHTML = '';
+        }
+        for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            if (window.addEventListener) {
+                el.addEventListener("mouseover", fn1, false);
+                el.addEventListener("mouseout", fn2, false);
+            }
+            else {
+                el.attachEvent("onmouseover", fn1, false);
+                el.attachEvent("onmouseout", fn2, false);
+            }
+        }
+    }
+    window.onload = function() {
+        enableBubble();
+
+        var btn = document.createElement('input');
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('value', '按钮');
+        var click = function(e) {
+            alert(e);
+        }
+        if (window.addEventListener) {
+            btn.addEventListener("onclick", click, false);           
+        }
+        else {
+
+            btn.attachEvent("onclick", click, false);            
+        }
+        document.body.appendChild(btn);
+    }  
+</script>
+

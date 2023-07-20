@@ -13,9 +13,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("FrameWork.Core")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Pfizer Inc")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("FrameWork.Core")]
-[assembly: AssemblyCopyright("Copyright © Pfizer Inc 2012")]
+[assembly: AssemblyCopyright("Copyright © Inc 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

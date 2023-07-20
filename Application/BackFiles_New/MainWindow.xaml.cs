@@ -16,7 +16,6 @@ using System.Runtime.Serialization.Json;
 using System.ServiceModel.Web;
 using System.IO;
 using System.Text.RegularExpressions;
-using ExtendsToolsForm.UserControls;
 using System.Windows.Forms;
 
 namespace BackFiles_New
@@ -26,6 +25,7 @@ namespace BackFiles_New
     /// </summary>
     public partial class MainWindow : Window
     {
+        static bool IsLoaded = false;
         NotifyIcon notifyIcon;
         WindowState wsl;
         bool isshowing = true;
@@ -110,6 +110,35 @@ namespace BackFiles_New
         private void Window_Closed(object sender, EventArgs e)
         {
             notifyIcon.Visible = false;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!IsLoaded)
+            {
+                FileSystemWatcher monitor = new FileSystemWatcher(@"D:/XXL_Job_Packages/", "HyperV.txt");
+                monitor.EnableRaisingEvents = true;
+                monitor.IncludeSubdirectories = true;
+                monitor.NotifyFilter = NotifyFilters.Attributes | NotifyFilters.LastWrite | NotifyFilters.Size;
+                monitor.Changed += (fsender, fe) =>
+                {
+                    string filepath = @"D:\XXL_Job_Packages\HyperV.txt";
+                    if (!File.Exists(filepath)) return;
+                    string tile = "";
+                    try
+                    {
+                        string nowtime = File.ReadAllText(@"D:\XXL_Job_Packages\HyperV.txt");
+                        tile = nowtime;
+                    }
+                    catch (Exception ex)
+                    {
+                        tile = ex.Message;
+                    }
+                    this.Dispatcher.Invoke(new Action(() => { this.Title = tile+" 2SC小工具"; }));
+                };
+                IsLoaded = true;
+
+            }
         }
     }
 }

@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>BackFiles_New</RootNamespace>
     <AssemblyName>BackFiles_New</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -50,10 +50,13 @@
     <StartupObject>BackFiles_New.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExtendsToolsForm">
-      <HintPath>..\..\..\..\..\MyCoreCode\smartframework\trunk\Application\ExtendsToolsForm\bin\Debug\ExtendsToolsForm.exe</HintPath>
+    <Reference Include="fastJSON">
+      <HintPath>..\Reference\fastJSON.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -74,14 +77,30 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UserControls\ChildControls\MonitorFiles.xaml.cs">
+      <DependentUpon>MonitorFiles.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\JsonStringFormaterControl.xaml.cs">
+      <DependentUpon>JsonStringFormaterControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\MonitorWindowLockTools.cs" />
+    <Compile Include="UserControls\MyWindowsConfigControl.xaml.cs">
+      <DependentUpon>MyWindowsConfigControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\WebBrower.xaml.cs">
+      <DependentUpon>WebBrower.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="BLL\ConfigBLL.cs" />
     <Compile Include="BLL\ExecuteCMDCommand.cs" />
-    <Compile Include="UserControls\BackUpUpLineFiles.xaml.cs">
-      <DependentUpon>BackUpUpLineFiles.xaml</DependentUpon>
+    <Compile Include="UserControls\BackUpUpLineFiles_Java.xaml.cs">
+      <DependentUpon>BackUpUpLineFiles_Java.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BackUpUpLineFiles_Net.xaml.cs">
+      <DependentUpon>BackUpUpLineFiles_Net.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\GenerateServicesInterFaceJson.xaml.cs">
       <DependentUpon>GenerateServicesInterFaceJson.xaml</DependentUpon>
@@ -99,11 +118,31 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\BackUpUpLineFiles.xaml">
+    <Page Include="UserControls\BackUpUpLineFiles_Java.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\BackUpUpLineFiles_Net.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ChildControls\MonitorFiles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\GenerateServicesInterFaceJson.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\JsonStringFormaterControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MyWindowsConfigControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\WebBrower.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,6 +168,7 @@
     </EmbeddedResource>
     <None Include="App.config" />
     <None Include="AppData\Config.json" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,0 +1,116 @@
+﻿<%-- 
+Name:生成 clt handler
+Author: 
+Description: 生成 clt handler
+--%>
+<%@ Template Language="C#" TargetLanguage="C#" %>
+<%@ Property Name="MainTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="主表" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="Che168.DAL.Admin.Authenticate" Optional="False" Category="Strings" Description="命名空间" %>
+<%@ Property Name="EntityNameSpace" Type="System.String" Default="Che168.Model.Admin.Authenticate" Optional="False" Category="Strings" Description="实体类命名空间" %>
+<%@ Property Name="DALNameSpace" Type="System.String" Default="Che168.DAL.Admin.Authenticate" Optional="False" Category="Strings" Description="DAL命名空间" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+
+<% ColumnSchema primaryKeyColumn = MainTable.Columns.FirstOrDefault(p => p.IsPrimaryKeyMember);%>
+<%%@ WebHandler Language="C#" Class="<%=NameSpace %>.<%=MainTable.Name%>" %>
+
+using Che168.Utils;
+using Che168.EnDecrypt;
+using Che168.Clt.Api.Common;
+using Che168.Utils;
+using System;
+using System.Linq;
+using <%=DALNameSpace %>;
+using <%=EntityNameSpace %>;
+
+namespace <%=NameSpace %>
+{
+    /// <summary>
+    /// 插入、更新 <%=MainTable.Description %>
+    /// </summary>
+    public class <%=MainTable.Name%> : ApiBaseObject , IPost
+    {
+        public override object ProcessRequest()
+        {
+            string action = Tools.GetRequestPostString("action");
+            object ret = null;
+            string error = "";
+            switch (action)
+            {
+                case "add":
+                    ret = Add();
+                    break;
+                case "update":
+                    ret = Update();
+                    break;
+                case "delete":
+                    break;
+            }            
+            return ret;
+        }
+        
+        public int Add()
+        {
+            <%=MainTable.Name%>Model model = new <%=MainTable.Name%>Model () ;
+            model = this.AutoMapper(model);
+            model.created_stime = DateTime.Now;
+            model.modified_stime = DateTime.Now;
+            return <%=MainTable.Name%>DAL.Add<%=MainTable.Name%>(model);
+        }
+        
+        public bool Update()
+        {
+            int <%=primaryKeyColumn.Name %> = Tools.GetRequestPostInt("<%=primaryKeyColumn.Name %>",0);
+            <%=MainTable.Name%>Model model = <%=MainTable.Name%>DAL.Get<%=MainTable.Name%>Info(<%=primaryKeyColumn.Name %>) ;
+            if ( model == null )
+                return false;
+            model = this.AutoMapper(model);
+            model.modified_stime = DateTime.Now;
+            return <%=MainTable.Name%>DAL.Update<%=MainTable.Name %>(model) > 0 ;
+        }
+    }
+}
+
+
+<%%@ WebHandler Language="C#" Class="<%=NameSpace %>.Get<%=MainTable.Name%>Info" %>
+
+using Che168.Utils;
+using Che168.EnDecrypt;
+using Che168.Clt.Api.Common;
+using Che168.Utils;
+using System;
+using System.Linq;
+using <%=DALNameSpace %>;
+using <%=EntityNameSpace %>;
+
+namespace <%=NameSpace %>
+{
+    /// <summary>
+    /// 获取 <%=MainTable.Description %>详情
+    /// </summary>
+    public class Get<%=MainTable.Name%>Info : ApiBaseObject
+    {
+        public override object ProcessRequest()
+        {
+            int <%=primaryKeyColumn.Name %> = Tools.GetInt(Tools.GetFastRequestString("<%=primaryKeyColumn.Name %>"), 0);
+            return <%=MainTable.Name%>DAL.Get<%=MainTable.Name%>Info(<%=primaryKeyColumn.Name %>);            
+        }
+    }
+}
+<script runat="template">
+// My methods here.
+public string SampleMethod()
+{
+  return "Method output.";
+}
+</script>

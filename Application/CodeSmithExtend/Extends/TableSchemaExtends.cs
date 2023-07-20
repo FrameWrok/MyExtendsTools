@@ -20,7 +20,7 @@ namespace SchemaExplorer
             StringBuilder insertSql = new StringBuilder("INSERT INTO " + table.Name + "( ");
             insertSql.AppendLine(string.Join(",", table.Columns.Where(p => !p.IsPrimaryKeyMember).Select(P => " " + P.Name).ToList()) + ")");
             insertSql.AppendLine("                            VALUES (" + string.Join(",", table.Columns.Where(p => !p.IsPrimaryKeyMember).Select(P => "@" + P.Name).ToList()) + ")");
-            insertSql.AppendLine("                            SELECT @@IDENTITY");
+            insertSql.AppendLine("                            SELECT SCOPE_IDENTITY()");
             return insertSql.ToString().Trim();
         }
         /// <summary>

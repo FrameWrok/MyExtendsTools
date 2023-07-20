@@ -18,6 +18,6 @@ namespace BackFiles_New.Models
         [DataMemberAttribute]
         public string TfsUserName { get; set; }
         [DataMemberAttribute]
-        public string TfsPwd { get; set; }
+        public string TfsPwd { get; set; }        
     }
 }

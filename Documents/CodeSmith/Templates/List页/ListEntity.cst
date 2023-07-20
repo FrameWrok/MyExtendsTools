@@ -1,0 +1,131 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="True" Description="" ResponseEncoding="UTF-8" %>
+<%@ Property Name="Namespace" Type="System.String" Default="Che168.Model" Optional="False" Category="Configs" Description="实体类命名空间" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="True" Category="Configs" Description="源表" OnChanged="tablechanged" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="Configs" Description="查询sql" Optional="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Configs" Optional="True" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Property Name="SearchColumn" Type="Dictionary<String,bool>" Category="字段配置" Optional="True" Description="搜索条件字段" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%--<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>--%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="False" %>
+<script runat="template">
+public TableSchema queryTable;
+public ExtendsTools et;
+public int shortDescriptionLen;
+public string querySql=null;
+public string tablename;
+</script>
+/**********************************************************
+ ●项目：<%=Namespace%>
+ ●创建：<%=DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") %>
+ ●版本：1.0
+ ●更新：
+**********************************************************/
+<%
+//System.Diagnostics.Debugger.Launch(); 
+//System.Diagnostics.Debugger.Break();  
+ExtendsTools et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+
+%>
+using System;
+namespace <%=Namespace%>
+{
+	/// <summary>
+	///  <%=ExtendsTools.TableSchemaExtends.GetModelDescription()%>实体
+	/// </summary>
+	[Serializable]
+    public partial class <%= et.MainTable.Name%>Model
+    {		
+		#region 自动生成
+		
+		<% for (int i = 0; i < et.MainTable.Columns.Count; i++) { %>
+		/// <summary>
+		/// <%= ExtendsTools.ColumnSchemaExtends.GetColumnSummary(et.MainTable.Columns[i]) %>
+		/// </summary>
+		public <%= ExtendsTools.ColumnSchemaExtends.GetCSharpVariableType(et.MainTable.Columns[i]) %> <%= et.MainTable.Columns[i].Name.ToLower() %> { get ; set ; }			
+		<% } %>	        
+		#endregion
+    }
+    public partial class <%= et.MainTable.Name%>QueryModel : <%= et.MainTable.Name%>Model
+    {
+        <% foreach (var colume in et.MainTable.Columns.Where(c=>this.SearchColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn")){%>
+        <%string columnSummary = ExtendsTools.ColumnSchemaExtends.GetColumnSummary(colume); %>
+        <%string columnname = colume.Name.ToLower(); %>        
+        <%if(colume.IsDateColumn()) { %>
+        /// <summary>
+	    /// <%= columnSummary %>查询开始时间
+	    /// </summary>
+        public DateTime? <%=columnname %>start { get ; set ;}
+        /// <summary>
+	    /// <%= columnSummary %>查询结束时间
+	    /// </summary>
+        public DateTime? <%=columnname %>end { get ; set ;} 
+        <%} %>
+    <%}%>
+    }
+}
+<script runat="template">
+public void tablechanged(object d, System.EventArgs e) {
+    //System.Diagnostics.Debugger.Launch();  
+    //System.Diagnostics.Debugger.Break(); 
+    //Debug.WriteLine("");
+    //if (this.QuerySqlScript == null || this.QuerySqlScript.Count>0) 
+        QuerySqlScriptChange(d,e);
+}
+public void QuerySqlScriptChange(object o, System.EventArgs e) {
+    querySql = null;
+    if (this.QuerySqlScript != null && this.QuerySqlScript.Count>0) {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in this.QuerySqlScript) {
+            sb.AppendLine(item);
+        }
+        querySql = sb.ToString();
+        this.queryTable = this.SourceDatabase.GetTableSchemaByScript(sb.ToString());
+        TableToSelectColums(this.queryTable);
+    }
+    else
+    {        
+        this.queryTable=this.SourceTable;
+        TableToSelectColums(this.SourceTable);
+    }
+}
+public void TableToSelectColums(TableSchema tableSchema) {
+    if (tableSchema != null && tablename != tableSchema.Name) {
+        tablename = tableSchema.Name;
+        SearchColumn = new Dictionary<string, bool>();        
+        SearchColumn.Clear();
+        if (tableSchema != null)
+            foreach (var item in tableSchema.Columns) {
+            if (item.Name.ToLower() != "rn") 
+                SearchColumn.Add(item.Name, !item.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase));
+        }
+    }
+}
+
+//public override string GetFileName() {
+//    return "ListDAL.cs";
+//}
+
+</script>

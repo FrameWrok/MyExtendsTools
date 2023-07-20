@@ -95,8 +95,10 @@ namespace SchemaExplorer
                 case "text":
                     return "SqlDbType.Text";
                 case "int":
+                case "system.int32":
                     return "SqlDbType.Int";
                 case "bigint":
+                case "system.int64":
                     return "SqlDbType.BigInt";
                 case "decimal":
                     return "SqlDbType.Decimal";
@@ -109,6 +111,7 @@ namespace SchemaExplorer
                 case "float":
                     return "SqlDbType.Float";
                 case "tinyint":
+                case "system.byte":
                     return "SqlDbType.TinyInt";
                 case "money":
                     return "SqlDbType.Money";
@@ -117,13 +120,14 @@ namespace SchemaExplorer
                 case "timestamp":
                     return "SqlDbType.Timestamp";
                 case "datetime":
+                case "system.datetime":
                     return "SqlDbType.DateTime";
                 case "datetime2":
                     return "SqlDbType.DateTime2";
                 case "date":
                     return "SqlDbType.Date";
                 case "datetimeoffset":
-                    return "SqlDbType.DateTimeOffset";                
+                    return "SqlDbType.DateTimeOffset";
                 case "char":
                     return "SqlDbType.Char";
                 case "nvarchar":
@@ -155,7 +159,7 @@ namespace SchemaExplorer
         /// </summary>
         /// <param name="column"></param>
         /// <returns></returns>
-        public  static bool IsStringColumn(this ColumnSchema column)
+        public static bool IsStringColumn(this ColumnSchema column)
         {
             return column.DataType == DbType.AnsiString || column.DataType == DbType.AnsiStringFixedLength || column.DataType == DbType.String || column.DataType == DbType.StringFixedLength;
         }

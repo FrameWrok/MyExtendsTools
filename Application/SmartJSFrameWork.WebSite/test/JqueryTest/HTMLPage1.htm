@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style type="text/css">
+        .topnav
+        {
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li id="foo" style="cursor: pointer;">foo</li>
+        <li id="bar">bar</li>
+    </ul>
+    <ul class="topnav">
+        <li>条目一</li>
+        <li>条目二
+            <ul>
+                <li>嵌套条目一</li>
+                <li>嵌套条目二</li>
+                <li>嵌套条目三</li>
+            </ul>
+        </li>
+        <li>条目三</li>
+    </ul>
+    <form action="#" id="form1" style="border: 2px solid green; padding: 3px;">
+    <div>
+        表单被绿色轮廓包围</div>
+    <label>
+        儿子：</label><input name="name" /><input type="button" value="text" />
+    <fieldset>
+        <label>
+            孙子：</label><input name="newsletter" />
+    </fieldset>
+    </form>
+    表单的同级元素:<input name="none" style="margin-top: 6px;" />
+    <table width="100%" border="1" cellspacing="0">
+        <caption>
+            表格（table元素）
+        </caption>
+        <tbody>
+            <tr>
+                <td id="td1" class="one" style="width: 189;">
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td class="one" style="width: 189;">
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td id="td2" class="two" style="width: 189;">
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td class="two" style="width: 189;">
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="p1"></p>
+</body>
+</html>
+<script language="javascript" type="text/javascript" src="../../Resouces/jquery-1.5.1.min.js"></script>
+<script language="javascript" type="text/javascript" src="../../Resouces/jquery-1.4.1-vsdoc.js"></script>
+<script language="javascript" type="text/javascript">
+    function indexTest() {
+        //alert($("li").index(document.getElementById("foo")));
+        alert($("#foo").index("li"));
+        //alert($("li").index($("#foo")));
+    }
+    $(document).ready(function () {
+        $("<ul></ul>").appendTo(document.body).append("<li>" + $("ul").context + "</li>").append("<li>" + $("ul", document.body).context.nodeName.toLowerCase() + "</li>").append("<li>" + $("ul").selector + "</li>");
+        $("li").each(function (index, el) {
+            var t = el.innerHTML;
+            el.onclick = function () {
+                alert(t);
+            }
+        });
+        $("li#bar").each(function (index, el) {
+            el.onclick = function ()
+            { alert("bbb") }
+        });
+
+        $("ul.topnav > li").css("border", "3px double red");
+        $("form#form1 input").css("border", "2px dotted blue");
+        $("label + input").css("color", "red").val("紧跟标签后面的同辈元素");
+        $("form :button").css("color", "red").val("紧跟标签后面的同辈元素").get(0).onclick = function () { alert("选择器：form :button") };
+        var a = new Array();
+        var b = new Array();
+        $("table > *").each(function () {
+            a[a.length] = this.tagName.toLowerCase();
+        });
+        $("table *").each(function () {
+            b[b.length] = this.tagName.toLowerCase();
+        });
+        var s = "<b> table的所有子元素：</b><br/>" + a.join(",");
+        s += "<br/><b>table的所有后代元素：<b>，<br/>" + b.join(",");
+        $("#p1").html(s);
+        $(".one + td").css("background", "red");
+        $("#td1").html("$(\".one + td\")返回" + $(".one + td").length + "个同辈元素");
+        $("#.two ~ td").css("background", "blue");
+        $("#td2").html("$(\".two ~ td )返回" + $(".two ~ td").length + "个同辈元素。")
+    });
+</script>

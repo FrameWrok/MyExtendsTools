@@ -1,0 +1,1279 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CodeSmithExtend</name>
+    </assembly>
+    <members>
+        <member name="T:CodeSmithExtend.App">
+            <summary>
+            App.xaml 的交互逻辑
+            </summary>
+        </member>
+        <member name="T:CodeSmithExtend.MainWindow">
+            <summary>
+            MainWindow.xaml 的交互逻辑
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:CodeSmithExtend.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:CodeSmithExtend.Properties.Resources">
+            <summary>
+              强类型资源类，用于查找本地化字符串等。
+            </summary>
+        </member>
+        <member name="P:CodeSmithExtend.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:CodeSmithExtend.Properties.Resources.Culture">
+            <summary>
+              覆盖当前线程的 CurrentUICulture 属性
+              使用此强类型的资源类的资源查找。
+            </summary>
+        </member>
+        <member name="T:FrameStringCaseType">
+            <summary>
+            字符串格式类型枚举，全角和半角
+            </summary>
+        </member>
+        <member name="F:FrameStringCaseType.SBC">
+            <summary>
+            全角
+            </summary>
+        </member>
+        <member name="F:FrameStringCaseType.DBC">
+            <summary>
+            半角
+            </summary>
+        </member>
+        <member name="T:FrameStringExtends">
+            <summary>
+            对 String 类的 扩展 验证
+            </summary>
+            <summary>
+            对 String 类的 扩展
+            </summary>
+        </member>
+        <member name="M:FrameStringExtends.ToPascalName(System.String)">
+            <summary>
+            获取帕斯卡命名，首字母大写
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameStringExtends.ToCamelName(System.String)">
+            <summary>
+            获取骆驼命名，首字母小写
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameStringExtends.Left(System.String,System.Int32)">
+            <summary>
+            返回 字符串 左侧指定长度的 字符串
+            </summary>
+            <param name="input">待 截取 字符串</param>
+            <param name="length">截取 的长度</param>
+            <returns>截取后返回的 字符串</returns>
+        </member>
+        <member name="M:FrameStringExtends.Right(System.String,System.Int32)">
+            <summary>
+            返回 字符串 右侧 指定长度的 字符串
+            </summary>
+            <param name="input">待 截取 字符串</param>
+            <param name="length">截取 的 长度</param>
+            <returns>截取后 返回的 字符串</returns> 
+        </member>
+        <member name="M:FrameStringExtends.Reverse(System.String)">
+            <summary>
+            将 字符串 进行 翻转 返回
+            </summary>
+            <param name="input">待 翻转 的字符串</param>
+            <returns>翻转后 的 字符串</returns>
+        </member>
+        <member name="M:FrameStringExtends.GetTrueLength(System.String)">
+            <summary>
+            返回 字符串 的长度，一个汉字 算 两个字符
+            </summary>
+            <param name="input">待检验 字符串</param>
+            <returns>返回 字符串的长度</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToString(System.String,FrameStringCaseType)">
+            <summary>
+            转换为全角或半角格式
+            </summary>
+            <param name="input">待转换的字符串</param>
+            <param name="frameStringCaseType">字符格式类型</param>
+            <returns>转换之后的结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToBoolean(System.String)">
+            <summary>
+            字符串装换为 bool 值
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameStringExtends.HexStringToBytes(System.String)">
+            <summary>
+            十六进制字符串（Hex）转换为byte数组
+            </summary>
+            <param name="hexString">十六进制字符串（hex）</param>
+            <returns>转换后的byte数组</returns>
+        </member>
+        <member name="M:FrameStringExtends.FromBase64String(System.String)">
+            <summary>
+            base64字符串转换为byte数组
+            </summary>
+            <param name="inputBase64">Base64编码的字符串</param>
+            <returns>base64字符串转换后的byte数组</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToByteArrary(System.String)">
+            <summary>
+            将字符串转换为byte数组
+            </summary>
+            <param name="input">数据源</param>
+            <returns>字符串转换后的byte数组</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToBase64String(System.String)">
+            <summary>
+            将字符串转换为 Base64编码等效字符串
+            </summary>
+            <param name="input">数据源字符串</param>
+            <returns>转换后的Base64编码字符串</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToHexString(System.String)">
+            <summary>
+            将字符串转换为16进制字符串hex
+            </summary>
+            <param name="input">要转换的字符串</param>
+            <returns>转换后的16进制字符串</returns>
+        </member>
+        <member name="M:FrameStringExtends.Truncate(System.String,System.Int32,System.String)">
+            <summary>
+            该字符串如果超出指定长度，则返回截取制定长度的字符串
+            如超出了指定长度，截取后可后面追加字符串
+            如 aaaabbbb 需要显示为 aaaa...
+            </summary>
+            <param name="input">要操作的字符串</param>
+            <param name="length">要截取的长度</param>
+            <param name="appendString">追加的字符串</param>
+            <returns>返回截取之后的结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.AppendChar(System.String,System.Int32,System.String)">
+            <summary>
+            如果该字符串不满足制定长度，则追加输入的 appendChar,直至满足制定长度
+            </summary>
+            <param name="input">输入的字符串</param>
+            <param name="length">需要满足的长度</param>
+            <param name="appendChar">如不满足指定长度，要追加的字符</param>
+            <returns>返回满足指定长度的字符串</returns>
+        </member>
+        <member name="M:FrameStringExtends.Join(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            串联类型为 System.String 的 System.Collections.Generic.IEnumerable[string] 构造集合的成员，其中在每个成员之间使用指定的分隔符。
+            </summary>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <param name="values">一个包含要串联的字符串的集合</param>
+            <returns>一个由 values 的成员组成的字符串，这些成员以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Join``1(System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            串联字符串集合的成员，其中在每个成员之间使用指定的分隔符。
+            </summary>
+            <typeparam name="T">values 成员的类型。</typeparam>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <param name="values">一个包含要串联的对象的集合。</param>
+            <returns>一个由 values 的成员组成的字符串，这些成员以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Join(System.String,System.Object[])">
+            <summary>
+            串联对象数组的各个元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <param name="values">一个数组，其中包含要连接的元素。</param>
+            <returns>一个由 values 的元素组成的字符串，这些元素以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Join(System.String,System.String[])">
+            <summary>
+            串联字符串数组的所有元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <param name="value">一个数组，其中包含要连接的元素。</param>
+            <returns>一个由 value 中的元素组成的字符串，这些元素以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Join(System.String,System.String[],System.Int32,System.Int32)">
+            <summary>
+            串联字符串数组的指定元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <param name="value">一个数组，其中包含要连接的元素。</param>
+            <param name="startIndex">value 中要使用的第一个元素。</param>
+            <param name="count">要使用的 value 的元素数。</param>
+            <returns>由 value 中的字符串组成的字符串，这些字符串以 separator 字符串分隔。- 或 -如果 count 为零，value 没有元素，或
+            separator 以及 value 的全部元素均为 System.String.Empty，则为 System.String.Empty。</returns>
+        </member>
+        <member name="M:FrameStringExtends.ClearHtmlTag(System.String)">
+            <summary>
+            去除所有Html标记
+            </summary>
+            <param name="input">待处理的文本</param>
+            <returns>处理的结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.Find(System.String,System.String)">
+            <summary>
+            通过正则表达式查找匹配的字符串
+            </summary>
+            <param name="input">待处理的字符串</param>
+            <param name="pattern">模式</param>
+            <returns>查找到的结果列表</returns>
+        </member>
+        <member name="M:FrameStringExtends.Compare(System.String,System.String)">
+            <summary>
+            与另一个字符串进行比较是否相等,默认区分大小写
+            </summary>
+            <param name="strA">字符串A</param>
+            <param name="strB">要比较的字符串</param>
+            <returns>比较结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.Compare(System.String,System.String,System.Boolean)">
+            <summary>
+            与另一个字符串进行比较是否相等,默认区分大小写
+            </summary>
+            <param name="strA">字符串A</param>
+            <param name="strB">要比较的字符串</param>
+            <param name="ignoreCase">是否不区分大小写</param>
+            <returns>比较结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.ToDateTime(System.String,System.String)">
+            <summary>
+            转换为时间
+            </summary>
+            <param name="input"></param>
+            <param name="format"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameStringExtends.IsMatch(System.String,System.String)">
+            <summary>
+            通过正则表达式验证，验证通过返回true
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="pattern">要匹配的正则表达式</param>
+            <returns>找到匹配项则返回True</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNumber(System.String)">
+            <summary>
+            验证是否是纯数字组合
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证结果：True=是，False=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDigit(System.String)">
+            <summary>
+            验证是否是小数或整数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>       
+            <returns>验证结果：True=是，False=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeInteger(System.String)">
+            <summary>
+            验证是否是非负整数，包含正整数和0（0.0,1,1.00,）
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveInteger(System.String)">
+            <summary>
+            验证是否是正整数，0不包含在内
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveInteger(System.String)">
+            <summary>
+            验证是否是非正整数,包含负整数和0（0，-1.0，-3）
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeInteger(System.String)">
+            <summary>
+            验证是否是负整数，0不包含在内
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsInteger(System.String)">
+            <summary>
+            验证是否是整数，0不包含在内(正整数和负整数)
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsIntegerOr0(System.String)">
+            <summary>
+            验证是否是整数或0
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeDouble(System.String)">
+            <summary>
+            验证是否是非负浮点数（正浮点数+0）
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeDouble(System.String)">
+            <summary>
+            验证是否是负浮点数
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveDouble(System.String)">
+            <summary>
+            验证是否是非正浮点数（负浮点数+0）
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveDouble(System.String)">
+            <summary>
+            验证是否是正浮点数
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDouble(System.String)">
+            <summary>
+            验证是否是浮点数
+            </summary>
+            <param name="input">待验证字符串</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDecimalDigits(System.String,System.Int32)">
+            <summary>
+            验证小数位数是不是指定的长度
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="length">指定的长度</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDecimalDigitsInScope(System.String,System.Int32,System.Int32)">
+            <summary>
+            验证小数位数是不是在指定的范围内
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="start">起始边界</param>
+            <param name="end">结束边界</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNumber(System.String,System.String@,System.String)">
+            <summary>
+            验证是否是纯数字组合，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：True=是，False=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDigit(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是小数或整数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的 小数或整数 等效 值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：True=是，False=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeInteger(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是非负整数，包含正整数和0（0.0,1,1.00,），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非负整数等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeInteger(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是非负整数，包含正整数和0（0.0,1,1.00,），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非负整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveInteger(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是正整数，0不包含在内，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的正整数(Int32)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveInteger(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是正整数，0不包含在内，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的正整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveInteger(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是非正整数,包含负整数和0（0，-1.0，-3），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int32)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveInteger(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是非正整数,包含负整数和0（0，-1.0，-3），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeInteger(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是负整数，0不包含在内，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int32)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeInteger(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是负整数，0不包含在内，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsInteger(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是整数，0不包含在内(正整数和负整数)，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int32)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsInteger(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是整数，0不包含在内(正整数和负整数)，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsIntegerOr0(System.String,System.Int32@,System.Int32)">
+            <summary>
+            验证是否是整数或0，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int32)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsIntegerOr0(System.String,System.Int64@,System.Int64)">
+            <summary>
+            验证是否是整数或0，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的非正整数(Int64)等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeDouble(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是非负浮点数（正浮点数+0），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (double) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoNegativeDouble(System.String,System.Decimal@,System.Decimal)">
+            <summary>
+            验证是否是非负浮点数（正浮点数+0），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (decimal) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeDouble(System.String,System.Decimal@,System.Decimal)">
+            <summary>
+            验证是否是负浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (decimal) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNegativeDouble(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是负浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (double) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveDouble(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是非正浮点数（负浮点数+0），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (double) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNoPositiveDouble(System.String,System.Decimal@,System.Decimal)">
+            <summary>
+            验证是否是非正浮点数（负浮点数+0），并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (decimal) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveDouble(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是正浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (double) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPositiveDouble(System.String,System.Decimal@,System.Decimal)">
+            <summary>
+            验证是否是正浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (decimal) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDouble(System.String,System.Double@,System.Double)">
+            <summary>
+            验证是否是浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (double) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDouble(System.String,System.Decimal@,System.Decimal)">
+            <summary>
+            验证是否是浮点数，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的浮点数 (decimal) 等效的值</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：true=是，false=否</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsEmail(System.String)">
+            <summary>
+            验证是否是Email格式
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证结果：True=是，False=不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPhone(System.String)">
+            <summary>
+            验证是不是电话号码，匹配010-1234567、010-12345678、0316-1234567、0316-12345678、1234567、12345678。
+            以及所有前面的号码加“-”、“转”、“#”之后加分机号码。
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsMobilePhone(System.String)">
+            <summary>
+            验证是不是手机号码
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDateTime(System.String)">
+            <summary>
+            验证是否是日期时间
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsZipCode(System.String)">
+            <summary>
+            验证是否是邮编
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUrl(System.String)">
+            <summary>
+            验证是否是URL
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsSocialID(System.String,System.String@,System.Nullable{System.DateTime}@,System.String@)">
+            <summary>
+            验证身份证号，验证通过返回true，并输出性别，出生日期
+            否则返回false，输出错误信息
+            </summary>
+            <param name="input">要验证的字符串</param>
+            <param name="sex">验证通过输出的年龄</param>
+            <param name="birthday">验证通过输出的出生日期</param>
+            <param name="errMessage">验证未通过输出的错误信息</param>
+            <returns>返回验证结果</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsEmail(System.String,System.String@,System.String)">
+            <summary>
+            验证是否是Email格式，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证结果：True=是，False=不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsPhone(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是电话号码，匹配010-1234567、010-12345678、0316-1234567、0316-12345678、1234567、12345678。
+            以及所有前面的号码加“-”、“转”、“#”之后加分机号码。
+            并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsMobilePhone(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是手机号码，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDateTime(System.String,System.Nullable{System.DateTime}@,System.Nullable{System.DateTime})">
+            <summary>
+            验证是否是日期时间，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            /// <param name="result">如果转换成功，则包含与 input 所包含的日期等效的日期</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsZipCode(System.String,System.String@,System.String)">
+            <summary>
+            验证是否是邮编，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUrl(System.String,System.String@,System.String)">
+            <summary>
+            验证是否是URL，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetterNumber(System.String)">
+            <summary>
+            验证是不是只是字母和数字的组合
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetterNumberUnderline(System.String)">
+            <summary>
+            验证是不是字符、数字或者下划线的组合
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDateTimeInScope(System.String,System.DateTime,System.DateTime)">
+            <summary>
+            验证日期是不是在指定的范围内
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="start">起始边界</param>
+            <param name="end">结束边界</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsIPAddress(System.String)">
+            <summary>
+            验证是不是正确的IP地址
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUserName(System.String,System.Int32,System.Int32)">
+            <summary>
+            验证是否符合用户名的格式（字母开头，允许字母数字下划线）,
+            是否符合指定长度范围 
+            验证是否不包含注入漏洞
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="start">用户名长度范围开始</param>
+            <param name="end">用户名长度范围结束</param>        
+            <returns>验证的结果：true＝符合；false＝不符合</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetter(System.String)">
+            <summary>
+            是否是只有26个英文字母组成的字符串
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUpper(System.String)">
+            <summary>
+            验证是不是只有大写字母组成的字符串
+            </summary>        
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLower(System.String)">
+            <summary>
+            验证是不是只有小写字母组成的字符串
+            </summary>        
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsChiness(System.String)">
+            <summary>
+            验证是不是中文字符串
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetterNumber(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是只是字母和数字的组合，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetterNumberUnderline(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是字符、数字或者下划线的组合，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsDateTimeInScope(System.String,System.DateTime,System.DateTime,System.Nullable{System.DateTime}@,System.Nullable{System.DateTime})">
+            <summary>
+            验证日期是不是在指定的范围内
+            并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="start">起始边界</param>
+            <param name="end">结束边界</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的日期等效的日期</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsIPAddress(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是正确的IP地址，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUserName(System.String,System.Int32,System.Int32,System.String@,System.String)">
+            <summary>
+            验证是否符合用户名的格式（字母开头，允许字母数字下划线）,
+            是否符合指定长度范围 
+            验证是否不包含注入漏洞
+            并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证字符串</param>
+            <param name="start">用户名长度范围开始</param>
+            <param name="end">用户名长度范围结束</param> 
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝符合；false＝不符合</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLetter(System.String,System.String@,System.String)">
+            <summary>
+            是否是只有26个英文字母组成的字符串，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsUpper(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是只有大写字母组成的字符串，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>        
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLower(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是只有小写字母组成的字符串，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>        
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsChiness(System.String,System.String@,System.String)">
+            <summary>
+            验证是不是中文字符串，并输出转换结果，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝是；false＝不是</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNullOrEmptyOrBlank(System.String)">
+            <summary>
+            验证字符串是否是NULL 或者 "" ，空格默认也认为是空
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>当输入值 是(NULL,"",空格)则返回true，否则返回false</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNotNullOrEmptyOrBlank(System.String)">
+            <summary>
+            验证字符串是否不是NULL 或者 ""，" " ，空格默认也认为是空
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <returns>当输入值 是(NULL,"",空格)则返回true，否则返回false</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLength(System.String,System.Int32)">
+            <summary>
+            验证长度是不是指定的长度
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="length">指定的长度</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLengthInScope(System.String,System.Int32,System.Int32)">
+            <summary>
+            验证长度是不是在指定的范围内
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="start">起始边界</param>
+            <param name="end">结束边界</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsNullOrEmptyOrBlank(System.String,System.String@,System.String)">
+            <summary>
+            验证字符串是否是NULL 或者 "" ，空格默认也认为是空
+            如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>当输入值 是(NULL,"",空格)则返回true，否则返回false</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLength(System.String,System.Int32,System.String@,System.String)">
+            <summary>
+            验证长度是不是指定的长度，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="length">指定的长度</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.IsLengthInScope(System.String,System.Int32,System.Int32,System.String@,System.String)">
+            <summary>
+            验证长度是不是在指定的范围内，如转换失败则输出该方法输入的默认值
+            </summary>
+            <param name="input">待验证的字符串</param>
+            <param name="start">起始边界</param>
+            <param name="end">结束边界</param>
+            <param name="result">如果转换成功，则包含与 input 所包含的字符串等效的字符串并Trim</param>
+            <param name="defaultValue">如果转换失败，则result等于defaultValue</param>
+            <returns>验证的结果：true＝在范围内；false＝不在范围内</returns>
+        </member>
+        <member name="M:FrameStringExtends.EncodePhone(System.String)">
+            <summary>
+            将手机号处理为 131****1234，0313-12****14
+            </summary>
+            <param name="phone"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameStringExtends.Formats(System.String,System.Object)">
+            <summary>
+            返回将指定字符串中的一个或多个格式项替换为指定对象的字符串表示形式。
+            </summary>
+            <param name="format">复合格式字符串。</param>
+            <param name="arg0">要设置格式的对象。</param>
+            <returns>format 的副本，其中的任何格式项均替换为 arg0 的字符串表示形式。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Formats(System.String,System.Object[])">
+            <summary>
+            将指定字符串中的格式项替换为指定数组中相应对象的字符串表示形式。
+            </summary>
+            <param name="format">复合格式字符串。</param>
+            <param name="args">一个对象数组，其中包含零个或多个要设置格式的对象。</param>
+            <returns>format 的副本，其中的格式项已替换为 args 中相应对象的字符串表示形式。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Formats(System.String,System.IFormatProvider,System.Object[])">
+            <summary>
+            返回 将指定字符串中的格式项替换为指定数组中相应对象的字符串表示形式。指定的参数提供区域性特定的格式设置信息。
+            </summary>
+            <param name="format">复合格式字符串。</param>
+            <param name="provider">一个提供区域性特定的格式设置信息的对象</param>
+            <param name="args">一个对象数组，其中包含零个或多个要设置格式的对象。</param>
+            <returns>返回 format 的副本，其中的格式项已替换为 args 中相应对象的字符串表示形式。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Formats(System.String,System.Object,System.Object)">
+            <summary>
+            返回 将指定字符串中的格式项替换为两个指定对象的字符串表示形式。
+            </summary>
+            <param name="format">复合格式字符串。</param>
+            <param name="arg0">要设置格式的第一个对象。</param>
+            <param name="arg1">要设置格式的第二个对象。</param>
+            <returns>返回 format 的副本，其中的格式项替换为 arg0 和 arg1 的字符串表示形式。</returns>
+        </member>
+        <member name="M:FrameStringExtends.Formats(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            返回 将指定字符串中的格式项替换为三个指定对象的字符串表示形式。
+            </summary>
+            <param name="format">复合格式字符串。</param>
+            <param name="arg0">要设置格式的第一个对象。</param>
+            <param name="arg1">要设置格式的第二个对象。</param>
+            <param name="arg2">要设置格式的第三个对象。</param>
+            <returns>返回 format 的副本，其中的格式项已替换为 arg0、arg1 和 arg2 的字符串表示形式。</returns>
+        </member>
+        <member name="M:FrameStringExtends.ConvertTo(System.Object,System.Type)">
+            <summary>
+            将字符串类型转换为其他数据类型
+            </summary>
+            <param name="resources">字符串数据源</param>
+            <param name="targetType">目标数据类型</param>
+            <returns>目标数据类型的值</returns>
+        </member>
+        <member name="T:FrameArraryExtends">
+            <summary>
+            对IEnumerable实例的扩展
+            </summary>
+        </member>
+        <member name="M:FrameArraryExtends.Join(System.Object[],System.String)">
+            <summary>
+            串联对象数组的各个元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="values">一个数组，其中包含要连接的元素。</param>
+            <param name="separator">要用作分隔符的字符串。</param>        
+            <returns>一个由 values 的元素组成的字符串，这些元素以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameArraryExtends.Join``1(System.Collections.Generic.IEnumerable{``0},System.String)">
+            <summary>
+            串联字符串集合的成员，其中在每个成员之间使用指定的分隔符。
+            </summary>
+            <typeparam name="T">values 成员的类型。</typeparam>
+            <param name="values">一个包含要串联的对象的集合。</param>
+            <param name="separator">要用作分隔符的字符串。</param>        
+            <returns>一个由 values 的成员组成的字符串，这些成员以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameArraryExtends.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            串联类型为 System.String 的 System.Collections.Generic.IEnumerable[string] 构造集合的成员，其中在每个成员之间使用指定的分隔符。
+            </summary>
+            <param name="values">一个包含要串联的字符串的集合</param>
+            <param name="separator">要用作分隔符的字符串。</param>
+            <returns>一个由 values 的成员组成的字符串，这些成员以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameArraryExtends.Join(System.String[],System.String)">
+            <summary>
+            串联字符串数组的所有元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="value">一个数组，其中包含要连接的元素。</param>
+            <param name="separator">要用作分隔符的字符串。</param>        
+            <returns>一个由 value 中的元素组成的字符串，这些元素以 separator 字符串分隔。</returns>
+        </member>
+        <member name="M:FrameArraryExtends.Join(System.String[],System.String,System.Int32,System.Int32)">
+            <summary>
+            串联字符串数组的指定元素，其中在每个元素之间使用指定的分隔符。
+            </summary>
+            <param name="value">一个数组，其中包含要连接的元素。</param>
+            <param name="separator">要用作分隔符的字符串。</param>        
+            <param name="startIndex">value 中要使用的第一个元素。</param>
+            <param name="count">要使用的 value 的元素数。</param>
+            <returns>由 value 中的字符串组成的字符串，这些字符串以 separator 字符串分隔。- 或 -如果 count 为零，value 没有元素，或
+            separator 以及 value 的全部元素均为 System.String.Empty，则为 System.String.Empty。</returns>
+        </member>
+        <member name="M:FrameArraryExtends.ToHexString(System.Byte[])">
+            <summary>
+            将byte[]数组转换为16进制字符串hex
+            </summary>
+            <param name="buffer">byte数组</param>
+            <returns>转换后的16进制字符串</returns>
+        </member>
+        <member name="M:FrameArraryExtends.ASCIIBytesToString(System.Byte[])">
+            <summary>
+            ASCII字符编码数组转换为字符串
+            </summary>
+            <param name="input">ASCII字符编码数组</param>
+            <returns>ASCII字符编码数组转换后的字符串</returns>
+        </member>
+        <member name="M:FrameArraryExtends.UTF16BytesToString(System.Byte[])">
+            <summary>
+            UTF-16 编码数组转换为字符串
+            </summary>
+            <param name="input">UTF-16 编码数组</param>
+            <returns>UTF-16 编码数组转换后的字符串</returns>
+        </member>
+        <member name="M:FrameArraryExtends.UTF8BytesToString(System.Byte[])">
+            <summary>
+            UTF-8编码数组转换为字符串
+            </summary>
+            <param name="input">UTF-8编码数组</param>
+            <returns>UTF-8编码数组转换后的字符串</returns>
+        </member>
+        <member name="M:FrameArraryExtends.ToBase64String(System.Byte[])">
+            <summary>
+            byte 数组转换为 Base64编码字符串
+            </summary>
+            <param name="input">byte数组</param>
+            <returns>byte 数组转换为 Base64编码后的字符串</returns>
+        </member>
+        <member name="M:FrameHttpExtends.ToObject``1(System.Web.UI.Page)">
+            <summary>
+            根据 Page.Request 中的值来初始化 T 对象,取值顺序为 Url,Form,Cookie
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameHttpExtends.ToObject``1(System.Web.HttpContext)">
+            <summary>
+            根据 HttpContext.Request 中的值来初始化 T 对象,取值顺序为 Url,Form,Cookie
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameHttpExtends.ToObject``1(System.Web.HttpRequest)">
+            <summary>
+            根据 HttpRequest 中的值来初始化 T 对象,取值顺序为 Url,Form,Cookie
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameHttpExtends.ParamsIsPass(System.Web.HttpContext,System.Collections.Generic.Dictionary{System.String,System.String},System.String@)">
+            <summary>
+            验证是否缺少必填参数
+            </summary>
+            <param name="context"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameHttpExtends.ParamsIsPass(System.Web.HttpRequest,System.Collections.Generic.Dictionary{System.String,System.String},System.String@)">
+            <summary>
+            验证是否缺少必填参数
+            </summary>
+            <param name="context"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <!-- 对于成员“M:FrameDataTableExtends.ToList``1(System.Data.DataTable)”忽略有格式错误的 XML 注释 -->
+        <member name="M:FrameDataTableExtends.ToObject``1(System.Data.DataRow)">
+            <summary>
+            将DataRow映射为实体
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="row"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameDataTableExtends.ToCsvString``1(System.Collections.Generic.List{``0},System.String,System.String)">
+            <summary>
+            将 List列表 转化为csv字符串
+            </summary>
+            <param name="sourcesList"></param>
+            <param name="header">name1,name2,name3</param>
+            <param name="columns">columnname1,columnname2,columnname3</param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameDataTableExtends.ToCsvString``1(System.Collections.Generic.List{``0},System.Web.HttpResponse,System.String,System.String,System.String)">
+            <summary>
+            将 List列表 转化为csv字符串
+            </summary>
+            <param name="sourcesList"></param>
+            <param name="filename">文件名称，不带后缀名</param>
+            <param name="header">name1,name2,name3</param>
+            <param name="columns">columnname1,columnname2,columnname3</param>
+            <returns></returns>
+        </member>
+        <member name="T:FrameDigitExtends">
+            <summary>
+            对Int类型的扩展
+            </summary>
+        </member>
+        <member name="M:FrameDigitExtends.ToMoneyChiness(System.String)">
+            <summary>
+            将int类型转换为人民币需要的汉字形式
+            </summary>
+            <param name="sources"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FrameDigitExtends.ToMoneyChiness(System.Decimal)">
+            <summary>
+            将int类型转换为人民币需要的汉字形式
+            </summary>
+            <param name="sources"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SchemaExplorer.ColumnSchemaExtends">
+            <summary>
+            列扩展
+            </summary>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.GetCSharpVariableType(SchemaExplorer.ColumnSchema)">
+            <summary>
+            获取与数据库字段类型对应的CSharp类型
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.GetJavaVariableType(SchemaExplorer.ColumnSchema)">
+            <summary>
+            获取与数据库字段类型对应的CSharp类型
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.GetNativeType(SchemaExplorer.ColumnSchema)">
+            <summary>
+            获取Column的数据库数据类型 SqlDbType
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <!-- 对于成员“M:SchemaExplorer.ColumnSchemaExtends.GetShortDescription(SchemaExplorer.ColumnSchema,System.Int32,System.Boolean)”忽略有格式错误的 XML 注释 -->
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.IsStringColumn(SchemaExplorer.ColumnSchema)">
+            <summary>
+            是否是字符串列
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.IsNumberColumn(SchemaExplorer.ColumnSchema)">
+            <summary>
+            是否是数字列，如 int,double等
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.IsDateColumn(SchemaExplorer.ColumnSchema)">
+            <summary>
+            是否是时间列如 Date，DateTime，DateTime2
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.ColumnSchemaExtends.GetInputMaxLength(SchemaExplorer.ColumnSchema)">
+            <summary>
+            获取字段的Input的输入框的最大长度
+            </summary>
+            <param name="column"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.DatabaseSchemaExtends.GetExecuteDataBase(SchemaExplorer.DatabaseSchema)">
+            <summary>
+            获取操作写入数据库的数据库操作符
+            </summary>
+            <param name="database"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.DatabaseSchemaExtends.GetTableSchemaByScript(SchemaExplorer.DatabaseSchema,System.String)">
+            <summary>
+            根据数据库执行输入的sql获取对应的 TableSchema，其中无法获取数据库中制定字段的长度
+            </summary>
+            <param name="database"></param>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SchemaExplorer.TableSchemaExtends">
+            <summary>
+            对CodeSmithTableSchema的扩展
+            </summary>
+        </member>
+        <member name="M:SchemaExplorer.TableSchemaExtends.GetInsertIntoSql(SchemaExplorer.TableSchema)">
+            <summary>
+            获取插入的sql，排除主键
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.TableSchemaExtends.GetUpdateSql(SchemaExplorer.TableSchema)">
+            <summary>
+            获取更新的SQL
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.TableSchemaExtends.GetInfoSql(SchemaExplorer.TableSchema)">
+            <summary>
+            获取查询详情sql
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SchemaExplorer.TableSchemaExtends.GetDeleteSql(SchemaExplorer.TableSchema)">
+            <summary>
+            物理删除的SQL
+            </summary>
+            <param name="table"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.SystemExtends.GetDbType(System.Type)">
+            <summary>
+            由C#的type获取 对应的DbType
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.SystemExtends.GetCSharpType(System.Data.DbType)">
+            <summary>
+            由DbType获取对应的C# 的 Type
+            </summary>
+            <param name="dbtype"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.SystemExtends.GetJavaType(System.Data.DbType)">
+            <summary>
+            由DbType获取对应的Java 的 Type
+            </summary>
+            <param name="dbtype"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

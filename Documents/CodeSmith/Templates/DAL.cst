@@ -1,0 +1,200 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="C#" Src="" Inherits="" Debug="False" Description="" ResponseEncoding="UTF-8" %>
+<%@ Property Name="MainTable" Type="SchemaExplorer.TableSchema" Category="Context" Description="主表" %>
+<%@ Property Name="DetailTable" Type="SchemaExplorer.TableSchema" Category="Context"  Optional="True"  Description="细表" %>
+<%@ Property Name="IsMultiTable" Type="System.Boolean" Default="False" Optional="False" Category="Booleans" Description="是否主细表" %>
+<%@ Property Name="NameSpace" Type="System.String" Default="Che168.DAL.Admin.Authenticate" Optional="False" Category="Strings" Description="命名空间" %>
+<%@ Property Name="EntityNameSpace" Type="System.String" Default="Che168.Model.Admin.Authenticate" Optional="False" Category="Strings" Description="实体类命名空间" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Register Template="../Reference/Extends.cst" Name="Extends"  MergeProperties="False"%>
+<%@ Register Template="Entity.cst" Name="EntityTemplate" %>
+
+/**********************************************************
+ ●项目：<%=NameSpace%>
+ ●创建：<%=DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") %>
+ ●版本：1.0
+ ●更新：
+ ●说明：生成单表的插入，更新，明细查询sql
+**********************************************************/
+using System.Data;
+using System;
+using Auto.DataHelper;
+using Auto.DataHelper.DbProviderFactory;
+using System.Collections.Generic;
+using Che168.Utils;
+using Che168.Utils.DataHelper;
+using System.Text;
+using System.Data.Common;
+using <%= EntityNameSpace%>;
+<% ColumnSchema primaryKeyColumn = MainTable.Columns.FirstOrDefault(p => p.IsPrimaryKeyMember);%>
+namespace <%=NameSpace%>
+{
+	/// <summary>
+	/// <%=MainTable.Description%>数据访问层
+	/// </summary>
+	public static partial class <%=MainTable.Name%>DAL
+	{
+		#region 自动生成
+        /// <summary>
+		/// 新增方法
+		/// </summary>
+		/// <param name="entity">实体</param>
+		public static int Add<%=MainTable.Name %>(<%=MainTable.Name%>Model entity)
+        {
+               string sql = @"<%=TableSchemaExtends.GetInsertIntoSql(MainTable) %>";
+               List<DbParameter> parList = new List<DbParameter>();
+               <% foreach (var colume in MainTable.Columns)
+               	{
+               		 if(!colume.IsPrimaryKeyMember)
+                     {%>
+               <%--parList.Add(DbParamProvider.Instance.MakeInParam("@<%=colume.Name %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, entity.<%=colume.Name + GetDefaultValue(colume)%>)); ////<%=colume.Description.Replace("\r\n"," ") %>--%>
+               parList.Add(DbParamProvider.Instance.MakeInParam("@<%=colume.Name %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, entity.<%=colume.Name.ToLower() + Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(colume) %>)); ////<%=colume.Description.Replace("\r\n"," ") %>
+                     <%}    
+               	} %>
+                sql += @" -- 文件路径  Add<%=MainTable.Name %>";
+               return Tools.GetInt(<%=Extends.GetDbOperator(MainTable.Database)%>Write.ExecuteScalar(sql, CommandType.Text, parList.ToArray()), 0);
+        }
+        
+        /// <summary>
+		/// 更新方法
+		/// </summary>
+		/// <param name="entity">实体</param>
+		public static int Update<%=MainTable.Name %>(<%=MainTable.Name%>Model entity)
+        {
+               string sql = @"<%=TableSchemaExtends.GetUpdateSql(MainTable) %> ; SELECT @@ROWCOUNT ;";
+               List<DbParameter> parList = new List<DbParameter>();
+               <% foreach (var colume in MainTable.Columns)
+               	{
+               		 %>
+               parList.Add(DbParamProvider.Instance.MakeInParam("@<%=colume.Name %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, entity.<%=colume.Name.ToLower() + Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(colume) %>)); ////<%=colume.Description.Replace("\r\n"," ") %>
+                     <%   
+               	} %>
+                sql += @" -- 文件路径  Update<%=MainTable.Name %>";
+               return Tools.GetInt(<%=Extends.GetDbOperator(MainTable.Database)%>Write.ExecuteScalar(sql, CommandType.Text, parList.ToArray()), 0);
+        }
+        
+        <% if(IsMultiTable && DetailTable != null){ %>        
+        /// <summary>
+		/// 新增主细表方法
+		/// </summary>
+		/// <param name="entity">实体</param>
+        /// <param name="detailEndity">细表实体</param>
+		public static int Add<%=MainTable.Name+DetailTable.Name %>(<%=MainTable.Name%>Model entity,List<<%=EntityNameSpace%>.<%=DetailTable.Name%>Model> detailEndity)
+        {
+               <% var mainPrimaryKeyColumn = ""; %>
+               StringBuilder sbsql = StringBuilder("");
+               string sql = @"<%=TableSchemaExtends.GetInsertIntoSql(MainTable) %>";
+               List<DbParameter> parList = new List<DbParameter>();
+               <% foreach (var colume in MainTable.Columns)
+               	{
+               		 if(!colume.IsPrimaryKeyMember)
+                     {%>
+               parList.Add(DbParamProvider.Instance.MakeInParam("@<%=colume.Name %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, entity.<%=colume.Name + Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(colume)%>)); ////<%=colume.Description.Replace("\r\n"," ") %>
+                     <%}
+                     else mainPrimaryKeyColumn = colume.Name;
+               	} %>
+                
+               #region  处理细表SQL
+               
+               if(detailEndity != null && detailEndity.Count > 0 )
+               {
+                    sbsql = new StringBuilder("DECLARE @<%= mainPrimaryKeyColumn%> int = 0 ; " + sql + " SELECT @<%= mainPrimaryKeyColumn%> = @@IDENTITY;"); 
+                    <% //StringBuilder sbsql = StringBuilder(" INSERT INTO " + DetailTable.Name +" ( ");
+                    string insertDetailSqlFormat = "";
+                    foreach (var colume in DetailTable.Columns)
+                	{
+                		 if(!colume.IsPrimaryKeyMember)
+                         {
+                            if(colume.Name != mainPrimaryKeyColumn)
+                                insertDetailSqlFormat += ("{0}" + colume.Name+"{1},");
+                            else
+                                insertDetailSqlFormat += ("{3}" + colume.Name+",");
+                         }
+                	} 
+                    //sbsql.AppendFormat(insertDetailSqlFormat,"","").Append(")");                    
+                    %>
+                    insertDetailSqlFormat = "<%= insertDetailSqlFormat%>";
+                    sbsql.AppendFormat(" INSERT INTO <%=DetailTable.Name%> ( "+ insertDetailSqlFormat + ")","","","");
+                    insertDetailSqlFormat = string.Format(insertDetailSqlFormat,"{0}d","{1}","{0}");
+                    for (int i = 0; i < detailEndity.Count; i++)
+                    {
+                       sbsql.AppendFormat("VALUES ( "+ insertDetailSqlFormat + ")","@",i);
+                        <% foreach (var colume in DetailTable.Columns)
+                       	{
+                       		 if(!colume.IsPrimaryKeyMember && colume.Name!=mainPrimaryKeyColumn )
+                             {%>
+                       parList.Add(DbParamProvider.Instance.MakeInParam("@d<%=colume.Name %>" + i, (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, detailEndity[i].<%=colume.Name+ Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(colume) %>)); ////<%=colume.Description %>
+                             <%}                             
+                       	} %>
+                    }
+                    sbsql.Append("SELECT @<%= mainPrimaryKeyColumn%>");
+                    
+               }
+               else
+                    sbsql = new  StringBuilder(sql);   
+               
+               #endregion
+               
+               return Tools.GetInt(<%=Extends.GetDbOperator(MainTable.Database)%>Write.ExecuteScalar(sql, CommandType.Text, parList.ToArray()), 0);
+        }        
+        /// <summary>
+		/// 更新细表方法
+		/// </summary>
+		/// <param name="entity">实体</param>
+		public static int Update<%=DetailTable.Name %>(<%=EntityNameSpace%>.<%=DetailTable.Name%>Model entity)
+        {
+               string sql = @"<%=TableSchemaExtends.GetUpdateSql(DetailTable) %>";
+               List<DbParameter> parList = new List<DbParameter>();
+               <% foreach (var colume in DetailTable.Columns)
+               	{
+               		 %>
+               parList.Add(DbParamProvider.Instance.MakeInParam("@<%=colume.Name %>", (DbType)<%= colume.GetNativeType() %>, <%= colume.Size %>, entity.<%=colume.Name+ Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(colume) %>)); ////<%=colume.Description %>
+                     <%    
+               	} %>
+                sql += @" -- 文件路径  Update<%=DetailTable.Name %>";
+               return Tools.GetInt(<%=Extends.GetDbOperator(MainTable.Database)%>Write.ExecuteScalar(sql, CommandType.Text, parList.ToArray()), 0);
+        }
+        <%} %>
+		#endregion
+        
+        
+        #region 根据主键获取详情
+        /// <summary>
+		/// 获取详情方法
+		/// </summary>
+		/// <param name="entity">实体</param>
+		public static <%=MainTable.Name%>Model Get<%=MainTable.Name %>Info(int <%=primaryKeyColumn.Name %>)
+        {
+               string sql = @"<%=TableSchemaExtends.GetInfoSql(this.MainTable) %>";
+               List<DbParameter> parList = new List<DbParameter>();
+               parList.Add(DbParamProvider.Instance.MakeInParam("@<%=primaryKeyColumn.Name %>", (DbType)<%= primaryKeyColumn.GetNativeType() %>, <%= primaryKeyColumn.Size %>, <%=primaryKeyColumn.Name.ToLower() + Extends.ColumnSchemaExtends.GetDbTypeDefaultValue(primaryKeyColumn)%>)); ////<%=primaryKeyColumn.Description.Replace("\r\n"," ") %>
+               sql += @" -- 文件路径  Get<%=MainTable.Name %>Info";
+               DataTable dt =  <%=Extends.GetDbOperator(MainTable.Database)%>Read.ExecuteDataSet(sql, CommandType.Text, parList.ToArray()).Tables[0];
+               if (dt != null && dt.Rows.Count > 0)
+                  return dt.Rows[0].ToObject<<%=MainTable.Name%>Model>();
+               return null;
+        }
+        #endregion
+	}
+}
+<script runat="Template">
+public override void Render(TextWriter writer)
+{
+    EntityTemplate entity = new  EntityTemplate();
+    entity.SourceTable = this.MainTable;
+    base.Render(writer);
+    
+    //entity.Render(writer);
+}
+</script>

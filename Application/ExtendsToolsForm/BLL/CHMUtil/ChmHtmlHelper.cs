@@ -9,14 +9,14 @@ namespace ExtendsToolsForm.BLL.CHMUtil
 {
     public class ChmHtmlHelper
     {
-        public static void CreateDirHtml(string tabDirName, IList<PdmTableInfoModel> lstTabs, string path)
+        public static void CreateDirHtml(string title, IList<PdmTableInfoModel> lstTabs, string path)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
             stringBuilder.AppendLine("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
             stringBuilder.AppendLine("<head>");
             stringBuilder.AppendLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\" />");
-            stringBuilder.AppendLine("    <title>{0}</title>".Formats(tabDirName));
+            stringBuilder.AppendLine("    <title>{0}</title>".Formats(title));
             stringBuilder.AppendLine("    <style type=\"text/css\">");
             stringBuilder.AppendLine("        * { font-family:'微软雅黑'; }");
             stringBuilder.AppendLine("        body { font-size: 9pt; font-family:'lucida console'; }");
@@ -34,7 +34,7 @@ namespace ExtendsToolsForm.BLL.CHMUtil
             stringBuilder.AppendLine("            <table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" width=\"90%\">");
             stringBuilder.AppendLine("                <tr style='border:0px;'>");
             stringBuilder.AppendLine("                  <td style='border:0px;'>");
-            stringBuilder.AppendLine("                      <div class=\"styletab\">{0}</div>".Formats("<b>" + tabDirName + "</b>"));
+            stringBuilder.AppendLine("                      <div class=\"styletab\">{0}</div>".Formats("<b>" + title + "</b>"));
             stringBuilder.AppendLine("                  </td>");
             stringBuilder.AppendLine("                </tr>");
             stringBuilder.AppendLine("                <tr>");
@@ -49,7 +49,7 @@ namespace ExtendsToolsForm.BLL.CHMUtil
                 stringBuilder.AppendLine("            <td>{0}</td>".Formats(
                     string.Concat(new string[]
                     {
-                        "<a href=\"表结构\\",
+                        "<a href=\""+title+"\\",
                         current.Code,
                         " ",
                         current.Name.Replace("/", "▪").Replace("\\", "▪"),

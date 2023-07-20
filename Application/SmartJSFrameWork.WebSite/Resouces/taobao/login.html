@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>淘宝联盟</title>
+	<link href="http://a.tbcdn.cn/apps/med/kissy/1.2/cssbase/base-min.css" rel="stylesheet" type="text/css"/>
+	<link href="http://a.tbcdn.cn/apps/med/med/tip/1.0/tip.css" rel="stylesheet" type="text/css"/>
+	<link href="http://a.tbcdn.cn/apps/med/www/css/sys/login-single.css?20120109.css" rel="stylesheet" type="text/css">
+	<script src="http://a.tbcdn.cn/apps/med/kissy/1.2/kissy-min.js" ></script>			
+</head>
+<body><script type="text/javascript">
+(function (d) {
+var ta=d.createElement("script");ta.type="text/javascript";ta.async=true;ta.id="tb-beacon-ac";
+ta.setAttribute("exparams","category=&userid=&channel=112&");
+ta.src=("https:"==d.location.protocol?"https://s":"http://a")+".tbcdn.cn/s/ac.js";
+d.getElementsByTagName("head")[0].appendChild(ta);
+})(document);
+</script>
+<script type="text/javascript">
+(function (d) {
+var ta=d.createElement("script");ta.type="text/javascript";ta.async=true;ta.id="tb-beacon";
+ta.setAttribute("exparams","category=&userid=&tid=&channel=112&atpanel_end");
+ta.src=("https:"==d.location.protocol?"https://s":"http://a")+".tbcdn.cn/s/atp.js";
+d.getElementsByTagName("head")[0].appendChild(ta);
+})(document);
+</script>
+<script type="text/javascript">
+(function (d) {
+var t=d.createElement("script");t.type="text/javascript";t.async=true;t.id="tb-beacon-aplus";
+t.setAttribute("exparams","category=&userid=&aplus");
+t.src=("https:"==d.location.protocol?"https://s":"http://a")+".tbcdn.cn/s/aplus_v2.js";
+d.getElementsByTagName("head")[0].appendChild(t);
+})(document);
+</script>
+
+
+<div id="content" class="login-normal">
+	<form method="post" name="login_form" id="login-form">
+		<input name='_tb_token_' type='hidden' value='5b3bee5e34585'>
+		<input type="hidden" name="transdata" value=""/>				
+		<input type="hidden" name="action" value="UnionMemberAction"/>
+		<input type="hidden" name="event_submit_do_mini_login" value="true"/>
+		<input type="hidden" name="redirectURL" value="" />
+		<input type="hidden" name="query_string" value=""/>
+		<ul class="form-auth">
+			<li class="field message" id="J_message"  style="display:none;" >
+				<div class="med-tip med-tip-b">
+					<p class="stop noclose">
+						<i class="icon"></i>
+						
+																							</p>
+				</div>
+			</li>
+			<li class="field">
+				<label class="field-label">账户名</label>
+				<input type="text" class="field-text" id="J_logname" title="邮箱" name="_fmu.l._0.l" value=""/>
+			</li>
+			<li class="field">
+				<label class="field-label">密<b class="blank"></b>码</label>
+				<input type="password" class="field-text"  id="J_logpassword" name="originalLogpasswd" maxlength="16" />
+				<input type="hidden" id="_fmu.l._0.lo" name="_fmu.l._0.lo" value="" />	
+			</li>
+						
+			<li class="field submit">
+				<button type="button" class="login-btn" id="J_submit"></button>
+				<a href="http://www.alimama.com/membersvc/member/get_password.htm" target="_blank">忘记密码？</a>
+			</li>
+			<li class="field register">
+				<p>没有淘宝联盟账户？<a href="http://www.alimama.com/membersvc/member/register.htm" target="_blank">免费注册</a></p>
+			</li>
+		</ul>
+	</form>
+</div>
+<script type="text/javascript" src="http://static.alimama.com/js/md5.js"></script>
+<script type="text/javascript">
+	function $(el){
+		return document.getElementById(el);
+	}
+
+	//检测用户名
+	function isRightEmail(email) {
+		var re=/^[\s]*[a-zA-Z0-9._%-]+@[a-zA-Z0-9._%-]+\.[a-zA-Z0-9]{2,4}[\s]*$/;
+		if(re.test(email))
+			return true;
+		else
+			return false;
+	}
+	//检测密码
+	function isRightPW(pwd) {
+		var re= /^[a-zA-Z0-9]*$/;
+		if (re.test(pwd))
+			return true;
+		else
+			return false;
+	}
+	//md5加密
+	function md5pass(){
+		var logPassword  = $("J_logpassword");
+		var md5Password  = $("_fmu.l._0.lo");
+		md5Password.value = hex_md5(logPassword.value);
+	}
+	
+	function checkinput() {
+		var logName = $("J_logname").value;
+		var logPassword  = $("J_logpassword").value;
+		var msgBox  = $("J_message");
+		var showCode = '';
+		var hasWrongPW = false;
+		var hasLogName = (logName == "") || (logName == null) || (logName.length == 0);
+		var hasLogPassword = (logPassword == "") || (logPassword == null) || (logPassword.length == 0);
+		if(hasLogName&&hasLogPassword){
+			showCode +=　"请输入用户名和密码";
+			hasWrongPW = true;
+		} else if(hasLogName){
+			showCode += "请输入用户名";
+			hasWrongPW = true;
+		} else if(!isRightEmail(logName)){
+			showCode += "登录名必须是合法的email地址";
+			hasWrongPW = true;
+		} else if(hasLogPassword) {
+			showCode += '请输入密码';
+			hasWrongPW = true;
+		} else if(logPassword.length < 6 || logPassword.length > 16) {
+			showCode += '密码最少6个字，不得超过16个字';
+			hasWrongPW = true;
+		} else if (!isRightPW(logPassword)){
+			showCode += '密码必须由字母、数字构成';
+			hasWrongPW = true;
+		} else {
+			hasWrongPW = false;
+		}
+		if(hasWrongPW)
+		{
+			msgBox.style.display = 'block';
+			msgBox.innerHTML = '<div class="med-tip med-tip-b"><p class="stop noclose"><i class="icon"></i>' + showCode + '</p></div>';
+			return false;
+		}
+		else{
+			//msgBox.style.display = 'none';
+			md5pass();
+			return true;
+		}
+	}
+	
+	//登录
+	$('J_submit').onclick = function(e){
+		if(checkinput()){
+			this.className = 'login-btn logining-btn';
+			$('login-form').submit();
+		}
+	}
+	
+	//绑定回车键
+	$("J_logname").onkeypress = function(){
+		var e = arguments[0] || window.event
+		
+		if (e.keyCode == 13){
+			if(checkinput()){
+				$('J_submit').className = 'login-btn logining-btn';
+				$('login-form').submit();
+			}
+		}
+	}
+	
+	$("J_logpassword").onkeypress = function(){
+		var e = arguments[0] || window.event
+		
+		if (e.keyCode == 13){
+			if(checkinput()){
+				$('J_submit').className = 'login-btn logining-btn';
+				$('login-form').submit();
+			}
+		}
+	}
+	
+		
+	//mini框错误提示
+	</script>
+
+<script data-proxy="http://www.alimama.com/union/proxy.htm" data-timer="300" data-frameid="J_mmLoginIfr">
+/**
+* 跨域iframe自适应高度解决方案
+* Author: changyin@taobao.com <http://www.lzlu.com>
+* Copyright (c) 2011, Taobao Inc. All rights reserved.
+*/
+(function(){
+	var adaptFrame = new function(){
+		var doc = document,body = doc.body,
+			self = this,
+			//获取url中的参数
+			getRequest = function(name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i"),
+				r = window.location.search.substr(1).match(reg);
+				return (r!=null)? unescape(r[2]) : null;
+			},
+			//获取配置，script的优先级大于url中的参数
+			getConfig = function(){
+				//scripts对象一定要在这里赋值，不然取不到正确的script对象
+				var scripts = doc.getElementsByTagName('script'),
+				script = scripts[scripts.length - 1];
+				return function(param){
+					var p = script.getAttribute(param);
+					return p? p : getRequest(param);
+				};
+			}(),
+			//代理高度
+			proxyheight = 0,
+			//top页frame的id
+			frameid = getConfig("data-frameid"),
+			//监听实时更新高度间隔
+			timer = getConfig("data-timer"),
+			//获取代理的url
+			getProxyuUrl = getConfig("data-proxy"),
+			//创建代理的iframe
+			proxyframe = function(){
+				var el = doc.createElement("iframe");
+				el.style.display = "none";
+				el.name="proxy";
+				return el;
+			}();
+		//重置高度
+		this.resize = function(){
+			proxyheight = body.offsetHeight;
+			proxyframe.src = getProxyuUrl + "?data-frameid=" + frameid+ "&data-frameheight=" + (proxyheight);
+		}
+		this.init = function(){
+			var init = function(){
+				body.appendChild(proxyframe);
+				self.resize();
+				//是否update
+				if(!isNaN(timer)){
+					timer = timer<300?300:timer;
+					window.setInterval(function(){
+						if(body.offsetHeight != proxyheight){
+							self.resize();
+						}
+					},timer);
+				};
+			};
+			//如果引入KISSY，建议改成：KISSY.ready(function(){init();});
+			if(doc.addEventListener){
+				window.addEventListener("load",init,false);
+			}else{
+				window.attachEvent("onload",init);
+			}
+		}
+	}
+	adaptFrame.init();
+})();
+</script>
+</body>
+</html>

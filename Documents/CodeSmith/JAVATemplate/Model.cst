@@ -1,0 +1,54 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Java" Src="" Inherits="" Debug="False" Description="" ResponseEncoding="UTF-8" %>
+<%@ Property Name="package" Type="System.String" Default="Che168.Model" Optional="False" Category="Strings" Description="实体类命名空间" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="True" Category="Configs" Description="源表" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="Configs" Description="查询sql" Optional="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Configs" Optional="True" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="True" %>
+<%
+ExtendsTools et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+%>
+package <%=package%>
+import java.util.*;
+
+/**
+*  <%=ExtendsTools.TableSchemaExtends.GetModelDescription()%>实体
+*/
+public class <%= et.MainTable.Name%>
+{	
+	<% foreach (ColumnSchema column in et.MainTable.Columns) { %>		
+	/**<%= ExtendsTools.ColumnSchemaExtends.GetColumnSummary(column) %>*/
+	private <%= ExtendsTools.ColumnSchemaExtends.GetJavaType(column.DataType) %> <%= column.Name.ToLower() %> ;
+	<% } %>	
+    
+    <% foreach (ColumnSchema column in et.MainTable.Columns) { %>		
+	/**set<%= ExtendsTools.ColumnSchemaExtends.GetColumnSummary(column)  %>*/
+	public void set<%=column.Name.ToLower().ToPascalName() %> (<%= ExtendsTools.ColumnSchemaExtends.GetJavaType(column.DataType) + " "+column.Name.ToLower() %> ) { this.<%= column.Name.ToLower()+" = "+ column.Name.ToLower()%>; }
+    /**get<%= ExtendsTools.ColumnSchemaExtends.GetColumnSummary(column) %>*/
+    public <%= ExtendsTools.ColumnSchemaExtends.GetJavaType(column.DataType) %> get<%=column.Name.ToLower().ToPascalName() %> () { return this.<%= column.Name.ToLower() %>;}
+	<% } %>	
+}

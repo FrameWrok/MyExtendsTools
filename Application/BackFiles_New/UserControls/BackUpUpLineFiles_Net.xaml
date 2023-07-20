@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="BackFiles_New.UserControls.BackUpUpLineFiles_Net"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BackFiles_New.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="550" d:DesignWidth="1000">
+    <Grid Margin="0,0,0,10">
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Height">
+                    <Setter.Value >25</Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="120"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label VerticalContentAlignment="Center" Margin="10,0,0,0" Content="Base Path："></Label>
+            <ComboBox VerticalContentAlignment="Center" IsEditable="True" Name="ddlBasePath" Height="25" DockPanel.Dock="Left" Grid.Column="1" Margin="0,0,10,0">
+            </ComboBox>
+            <Button Width="90" Margin="0,0,0,0" Content="删除" Name="btnDelBasePath" Click="btnDelBasePath_Click" Grid.Column="2"></Button>
+        </Grid>
+        <DockPanel Grid.Row="1">
+            <TextBox Margin="10,5,10,0" Name="txtFileList" TextWrapping="NoWrap" AcceptsReturn="True" KeyUp="txtFileList_KeyUp" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"></TextBox>
+        </DockPanel>
+        <DockPanel Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="110"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="110"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="110"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label VerticalContentAlignment="Center" Content="Copy To Path："></Label>
+                <ComboBox VerticalContentAlignment="Center" IsEditable="True" Grid.Column="1" Name="ddlCopyToPath" Height="25">
+                </ComboBox>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="tfs账号：" Grid.Column="2"></Label>
+                <TextBox Width="100" Grid.Column="3" Name="txtTfsUserName" VerticalContentAlignment="Center" Margin="0,0,0,0" Height="25"></TextBox>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="tfs密码：" Grid.Column="4"></Label>
+                <TextBox Width="100" Grid.Column="5" Name="txtTfsPwd" VerticalContentAlignment="Center" Margin="0,0,10,0" Height="25"></TextBox>
+                <Label VerticalContentAlignment="Center" HorizontalAlignment="Right" Content="签入注释：" Grid.Column="6"></Label>
+                <TextBox Width="100" Grid.Column="7" Name="txtCheckInComment" VerticalContentAlignment="Center" Margin="0,0,10,0" Height="25"></TextBox>
+            </Grid>
+
+        </DockPanel>
+        <DockPanel Grid.Row="3">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="90"></ColumnDefinition>
+                    <ColumnDefinition Width="110"></ColumnDefinition>
+                    <ColumnDefinition Width="90"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="70"></ColumnDefinition>
+                    <ColumnDefinition Width="130"></ColumnDefinition>
+                    <ColumnDefinition Width="170"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Column="1" Content="复制后打开" VerticalAlignment="Center" HorizontalAlignment="Left" Name="cbOpenRootPath"></CheckBox>
+                <Button Grid.Column="2" Content="递归复制文件" Name="btnCopy" HorizontalAlignment="Left" Click="btnRecursionCopy_Click" Width="100" ToolTip="递归复制,包含子目录"></Button>
+                <Button Grid.Column="3" Content="复制文件" Name="btnRecursionCopy" HorizontalAlignment="Left" Click="btnCopy_Click" Width="80" ToolTip="复制"></Button>
+                <Button Grid.Column="4" Content="清空" Name="btnReset" Width="60" HorizontalAlignment="Left" Click="btnReset_Click" ToolTip="清空"></Button>
+                <Button Grid.Column="5" Content="返回" Name="btnGoBack" Width="60" HorizontalAlignment="Left" Click="btnGoBack_Click" ToolTip="返回上一次操作"></Button>
+                <Button Grid.Column="6" Content="生成 TFS 提交(递归)" Name="btnTfsCheckIn" HorizontalAlignment="Left" Width="120" Click="btnTfsCheckIn_Click" ToolTip="生成 TFS 提交(递归目录),生成后复制到vs开发人员命令"></Button>
+                <Button Grid.Column="7" Content="生成 GIT 提交(递归)" Name="btnGitCheckIn" Width="120" HorizontalAlignment="Left" Click="btnGitCheckIn_Click" ToolTip="生成 GIT 提交(递归目录)"></Button>
+                <CheckBox Grid.Column="7" Content="push" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0" Padding="0" Name="cbGitPush"></CheckBox>
+            </Grid>
+
+        </DockPanel>
+    </Grid>
+</UserControl>

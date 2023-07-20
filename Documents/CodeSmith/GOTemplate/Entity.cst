@@ -1,0 +1,39 @@
+﻿<%@ CodeTemplate Language="C#" TargetLanguage="Text" Src="" Inherits="" Debug="True" Description="" ResponseEncoding="UTF-8" %>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="True" Category="Configs" Description="源表" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="Configs" Description="查询sql" Optional="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Configs" Optional="True" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%--<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>--%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="False" %>
+<%
+ExtendsTools et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+%>
+type <%= et.MainTable.Name%> struct {
+    <% for (int i = 0; i < et.MainTable.Columns.Count; i++) { %>			
+	// <%= ExtendsTools.ColumnSchemaExtends.GetColumnSummary(et.MainTable.Columns[i]) %>	
+	<%= et.MainTable.Columns[i].Name.Left(1).ToUpper()+et.MainTable.Columns[i].Name.Right(et.MainTable.Columns[i].Name.Length-1) %> <%= ExtendsTools.ColumnSchemaExtends.GetGoType(et.MainTable.Columns[i].DataType) %> `json:"<%= et.MainTable.Columns[i].Name.ToLower() %>"`
+	<% } %>
+}

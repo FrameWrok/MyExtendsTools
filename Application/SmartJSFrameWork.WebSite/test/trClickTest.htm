@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<title>Ext江湖</title>
+<body onload="myEffect()">
+    <table id="mytab" border="1">
+        <tr>
+            <td>
+                第1列
+            </td>
+            <td>
+                第2列
+            </td>
+            <td>
+                第3列
+            </td>
+            <td>
+                第4列
+            </td>
+            <td>
+                第5列
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+        <tr>
+            <td>
+                1
+            </td>
+            <td>
+                2
+            </td>
+            <td>
+                3
+            </td>
+            <td>
+                4
+            </td>
+            <td>
+                5
+            </td>
+        </tr>
+    </table>
+    <div id="console" style="background: #ffff00">
+    </div>
+
+    <script language="javascript" type="text/javascript">
+
+        function myEffect() {
+            var console = document.getElementById('console');
+            var tab = document.getElementById('mytab');
+            var trs = tab.getElementsByTagName('tr');
+            for (var i = 0; i < trs.length; i++) {
+                var tr = trs[i];
+                tr.onmouseover = function() {
+                    this.style.background = "#ff0000";
+                }
+                tr.onmouseout = function() { this.style.background = "#ffffff"; }
+                tr.onclick = (function() {
+                    var rowNum = i;
+                    return function()
+                    { console.innerHTML = "点击了第" + rowNum + "行"; }
+                })();
+            }
+            var b = function() {
+                var btn = document.createElement('input');
+                btn.setAttribute('type', 'button');
+                btn.setAttribute('value', '对讲机按钮');
+                btn.onclick = function(e) { alert("1号床，你妈来了！"); };
+                btn.onclick = function(e) { alert("2号床，你爸来了！"); };
+                document.body.appendChild(btn);
+            } ();
+        }
+        
+    </script>
+
+</body>
+</html>

@@ -78,7 +78,7 @@ namespace ExtendsToolsForm.UserControls
                     Directory.CreateDirectory(fullPath);
                 }
                 ChmHtmlHelper.CreateDirHtml(filename, lstTabs, Path.Combine(fullPath, defaultpage));
-                fullPath = System.IO.Path.GetFullPath("tmp\\表结构");
+                fullPath = System.IO.Path.GetFullPath("tmp\\"+ filename);
                 if (!Directory.Exists(fullPath))
                 {
                     Directory.CreateDirectory(fullPath);

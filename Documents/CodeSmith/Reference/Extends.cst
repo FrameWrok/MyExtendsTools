@@ -1,0 +1,394 @@
+﻿<%@ Template Language="C#" Debug="True"%>
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Optional="True" Category="Configs" Description="源表" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="Configs" Description="字段备注来源表" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="Configs" Description="查询sql" Optional="True" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="Configs" Optional="True" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>
+
+
+<script runat="template">
+public TableSchema queryTable, MainTable;
+public void Init()
+{
+    //Debugger.Break();
+    bool isSqlQuery = false;
+    if (this.SourceTable == null && (this.QuerySqlScript ==null || this.QuerySqlScript.Count==0))
+        throw new ApplicationException("请选择 SourceTable. 或者输入查询语句");
+    
+    
+    List<TableSchema> tableSources = new List<TableSchema>();
+    if (this.SourceDatabase != null && this.QuerySqlScript != null && this.QuerySqlScript.Count>0) {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in this.QuerySqlScript) {
+            sb.AppendLine(item);
+        }
+        this.MainTable = GetTableSchemaByScript(this.SourceDatabase,sb.ToString());
+        isSqlQuery  = true ;
+    }        
+    else
+    {    
+        this.MainTable = this.SourceTable;
+    }
+    
+    tableSources.Add(this.SourceTable);
+    if(isSqlQuery)
+    {
+        tableSources.Add(SourceTable2);
+        tableSources.Add(SourceTable3);
+        tableSources.Add(SourceTable4);
+    }
+    TableSchemaExtends.AddTableToSummaryDic(tableSources);
+} 
+
+static Type typeInt16 = typeof(System.Int16);
+static Type typeInt32 = typeof(System.Int32);
+static Type typeInt64 = typeof(System.Int64);
+static Type typeDateTime = typeof(System.DateTime);
+static Type typeString = typeof(System.String);
+static Type typestring = typeof(string);
+static Type typeUInt16 = typeof(System.UInt16);
+static Type typeUInt32 = typeof(System.UInt32);
+static Type typeUInt64 = typeof(System.UInt64);
+static Type typeDecimal = typeof(System.Decimal);
+static Type typeDouble = typeof(System.Double);
+static Type typeshort = typeof(short);
+static Type typeushort = typeof(ushort);
+static Type typelong = typeof(long);
+static Type typeulong = typeof(ulong);
+
+
+/// <summary>
+/// 获取数据库名称
+/// </summary>
+/// <param name="dbschema"></param>
+/// <returns></returns>
+public static string GetDbOperator(DatabaseSchema dbschema)
+{
+    switch(dbschema.Name.ToLower())
+    {
+        case "usedcar":
+           return "DataBaseOperator.UsedCar";
+        case "usedcarlog":
+           return "DataBaseOperator.UsedCarLog";
+        case "usedcardealer":
+           return "Che168DataBaseOperator.UsedCarDealer";
+        case "usedcartrader":
+           return "Che168DataBaseOperator.UsedCarTrader";
+        case "ttpaidata":
+            return "Che168DataBaseOperator.TTPaiData";
+        case "auto_privilege":
+            return "Che168DataBaseOperator.Auto_Privilege";
+    }
+    return "";
+}
+
+/// <summary>
+/// 由 .net type获得 数据库类型
+/// </summary>
+/// <param name="type"></param>
+/// <returns></returns>
+public static System.Data.DbType GetDbType(Type type)
+{
+    if (type == typeInt16) return DbType.Int16;
+    if (type == typeUInt16) return DbType.UInt16;
+    if (type == typeInt32) return DbType.Int32;
+    if (type == typeUInt32) return DbType.UInt32;
+    if (type == typelong) return DbType.Int64;
+    if (type == typeInt64) return DbType.Int64;
+    if (type == typeUInt64) return DbType.UInt64;
+    if (type == typeulong) return DbType.UInt64;
+    if (type == typeDecimal) return DbType.Decimal;
+    if (type == typeDouble) return DbType.Double;
+    if (type == typestring) return DbType.String;
+    if (type == typeString) return DbType.String;
+    if (type == typeDateTime) return DbType.DateTime;
+    if (type == typeshort) return DbType.SByte;
+    if (type == typeushort) return DbType.Byte;
+    return DbType.String;
+}
+
+/// <summary>
+/// 根据数据库执行输入的sql获取对应的 TableSchema，其中无法获取数据库中指定字段的长度
+/// </summary>
+/// <param name="database"></param>
+/// <param name="sql"></param>
+/// <returns></returns>
+public static TableSchema GetTableSchemaByScript(DatabaseSchema database, string sql)
+{
+    DataTable dt = new DataTable();
+    DbProviderFactory dbFactory = SqlClientFactory.Instance;
+    DbConnection dbConnection = dbFactory.CreateConnection();
+    dbConnection.ConnectionString = database.ConnectionString;
+    using (DbCommand dbcommand = dbConnection.CreateCommand())
+    {
+        dbcommand.CommandType = CommandType.Text;
+        dbcommand.CommandText = " SET ROWCOUNT  1; " + sql;
+        dbcommand.CommandTimeout = 180;
+
+        using (DbDataAdapter dataAdapter = dbFactory.CreateDataAdapter())
+        {
+            dataAdapter.SelectCommand = dbcommand;
+            dataAdapter.Fill(dt);
+        }
+    }
+    if (dt != null)
+    {
+        dt.TableName = "Query_" + sql.Length;
+        var tc = new System.ComponentModel.TypeConverter();
+        TableSchema tbs = new TableSchema(database, "QueryList", "dbo", DateTime.Now);
+        foreach (DataColumn column in dt.Columns)
+        {
+            tbs.Columns.Add(new ColumnSchema(tbs, column.ColumnName, GetDbType(column.DataType), column.DataType.ToString(), 0, 0, 0, column.AllowDBNull));
+        }
+        return tbs;
+    }
+    return null;
+}
+
+/// <summary>
+/// 表扩展
+/// </summary>
+public static class TableSchemaExtends{
+    public static List<TableSchema> sourcesTableList = new List<TableSchema>();
+    
+    /// <summary>
+    /// 将 TableSchema 的列说明累加到列说明队列
+    /// </summary>
+    /// <param name="tableList"></param>
+    public static void AddTableToSummaryDic(List<TableSchema> tableList)
+    {
+        sourcesTableList = tableList;
+        foreach (var table in tableList)
+    	{
+    		if(table != null)
+            {
+                foreach (var item in table.Columns)
+            	{
+            		 if(!ColumnSchemaExtends.SummaryDic.ContainsKey(item.Name.ToLower()) && !string.IsNullOrEmpty(item.Description))
+                         ColumnSchemaExtends.SummaryDic.Add(item.Name.ToLower(),item);
+            	}
+            }
+    	}
+    }
+    
+    /// <summary>
+    /// 获取第一个数据表的说明
+    /// </summary>
+    /// <returns></returns>
+    public static string GetModelDescription()
+    {
+        if(sourcesTableList!=null && sourcesTableList.Count>0)
+            return sourcesTableList[0].Description;
+        return "";
+    }
+    
+}
+
+/// <summary>
+/// 列扩展
+/// </summary>
+public static class ColumnSchemaExtends{
+    
+    public static Dictionary<string,ColumnSchema> SummaryDic = new Dictionary<string,ColumnSchema>();
+    
+    /// <summary>
+    /// 获取默认值
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
+    public static string GetDbTypeDefaultValue (ColumnSchema column)
+    {
+        switch(column.DataType)
+        {
+            case DbType.String:
+            case DbType.StringFixedLength:
+            case DbType.AnsiString:
+            case DbType.AnsiStringFixedLength: return " ?? \"\"";
+            default:break;
+        }
+        
+        if(!column.AllowDBNull)
+            return null;
+        switch(column.DataType)
+        {
+            
+            case DbType.Byte:  { return " ?? 0"; };
+            case DbType.Boolean: { return " ?? true"; };
+            case DbType.Currency:  { return " ?? 0"; };
+            case DbType.Decimal: { return " ?? 0"; };
+            case DbType.Double:  { return " ?? 0"; };
+            case DbType.Int16:  { return " ?? 0"; };
+            case DbType.UInt16:  { return "ushort"; };
+            case DbType.Int32:  { return " ?? 0"; };
+            case DbType.UInt32:  { return " ?? 0"; };
+            case DbType.Int64:  { return " ?? 0"; };
+            case DbType.UInt64:  { return " ?? 0"; };
+            case DbType.SByte: { return " ?? 0"; };
+            case DbType.Single:  { return " ?? 0"; };
+            case DbType.Date:  { return " ?? DateTime.Now"; };
+            case DbType.DateTime:  { return " ?? DateTime.Now"; };
+            case DbType.Time:  { return "TimeSpan"; };
+            case DbType.VarNumeric:  { return "decimal"; };
+            default: return "";
+        }
+        return "";
+    }
+    
+    /// <summary>
+    /// 由数据库类型转为 .net数据类型
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
+    public static string GetCSharpVariableType(ColumnSchema column)
+    {
+        switch (column.DataType)
+        {
+            case DbType.String:
+            case DbType.StringFixedLength:
+            case DbType.AnsiString:
+            case DbType.AnsiStringFixedLength: return "string";
+            case DbType.Binary: return "Nullable<int>";                
+            case DbType.Guid: return "Guid";
+            case DbType.Object: return "object";            
+//                case DbType.Byte: if (column.AllowDBNull) { return "Nullable<int>"; } else { return "int"; };
+//                case DbType.Boolean: if (column.AllowDBNull) { return "Nullable<bool>"; } else { return "bool"; };
+//                case DbType.Currency: if (column.AllowDBNull) { return "Nullable<decimal>"; } else { return "decimal"; };
+//                case DbType.Decimal: if (column.AllowDBNull) { return "Nullable<decimal>"; } else { return "decimal"; };
+//                case DbType.Double: if (column.AllowDBNull) { return "Nullable<double>"; } else { return "double"; };
+//                case DbType.Int16: if (column.AllowDBNull) { return "Nullable<short>"; } else { return "short"; };
+//                case DbType.UInt16: if (column.AllowDBNull) { return "Nullable<ushort>"; } else { return "ushort"; };
+//                case DbType.Int32: if (column.AllowDBNull) { return "Nullable<int>"; } else { return "int"; };
+//                case DbType.UInt32: if (column.AllowDBNull) { return "Nullable<uint>"; } else { return "uint"; };
+//                case DbType.Int64: if (column.AllowDBNull) { return "Nullable<long>"; } else { return "long"; };
+//                case DbType.UInt64: if (column.AllowDBNull) { return "Nullable<ulong>"; } else { return "ulong"; };
+//                case DbType.SByte: if (column.AllowDBNull) { return "Nullable<sbyte>"; } else { return "sbyte"; };
+//                case DbType.Single: if (column.AllowDBNull) { return "Nullable<float>"; } else { return "float"; };
+//                case DbType.Date: if (column.AllowDBNull) { return "Nullable<DateTime>"; } else { return "DateTime"; };
+            case DbType.Date:
+            case DbType.DateTime:
+            case DbType.DateTime2: if (column.AllowDBNull) { return "Nullable<DateTime>"; } else { return "DateTime"; };
+            
+//                case DbType.Time: if (column.AllowDBNull) { return "Nullable<TimeSpan>"; } else { return "TimeSpan"; };
+//                case DbType.VarNumeric: if (column.AllowDBNull) { return "Nullable<decimal>"; } else { return "decimal"; };
+            case DbType.Byte:  { return "int"; };
+            case DbType.Boolean: { return "bool"; };
+            case DbType.Currency:  { return "decimal"; };
+            case DbType.Decimal: { return "decimal"; };
+            case DbType.Double:  { return "double"; };
+            case DbType.Int16:  { return "short"; };
+            case DbType.UInt16:  { return "ushort"; };
+            case DbType.Int32:  { return "int"; };
+            case DbType.UInt32:  { return "uint"; };
+            case DbType.Int64:  { return "long"; };
+            case DbType.UInt64:  { return "ulong"; };
+            case DbType.SByte: { return "sbyte"; };
+            case DbType.Single:  { return "float"; };
+            //case DbType.Date:  { return "DateTime"; };
+            //case DbType.DateTime:  { return "DateTime"; };
+            case DbType.Time:  { return "TimeSpan"; };
+            case DbType.VarNumeric:  { return "decimal"; };
+            default:    MessageBox.Show(column.DataType.ToString()); return "string";
+        }
+    }
+    
+    /// <summary>
+    /// 获取列说明
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
+    public static string GetColumnSummary(ColumnSchema column)
+    {
+        if(SummaryDic == null)
+            SummaryDic = new Dictionary<string,ColumnSchema>();
+        if(SummaryDic.ContainsKey(column.Name.ToLower()))
+            return SummaryDic[column.Name.ToLower()].Description.Trim().Replace("\r\n","\r\n        ///");
+        return "";
+    }
+    /// <summary>
+    /// 获取列说明
+    /// </summary>
+    /// <param name="column"></param>
+    /// <returns></returns>
+    public static string GetColumnSummary(ColumnSchema column, int length)
+    {
+        return GetColumnSummary(column).Left(length);
+    }
+     /// <summary>
+    /// 由DbType获取对应的Java 的 Type
+    /// </summary>
+    /// <param name="dbtype"></param>
+    /// <returns></returns>
+    public static string GetJavaType(System.Data.DbType dbtype)
+    {
+        switch (dbtype)
+        {
+            case DbType.Int16: 
+            case DbType.UInt16:
+            case DbType.Int32: 
+            case DbType.UInt32: return "Integer";
+            case DbType.Int64: 
+            case DbType.UInt64: return "long";
+            case DbType.Byte: return "Integer";
+            case DbType.Date:
+            case DbType.DateTime:
+            case DbType.DateTime2: return "Date";
+            case DbType.String:
+            case DbType.StringFixedLength:
+            case DbType.AnsiString:
+            case DbType.AnsiStringFixedLength: return "String";
+            case DbType.Decimal: return "Float";
+            case DbType.Double: 
+            case DbType.Currency: return "double";
+            default: return "String" ;
+        }
+    }
+    /// <summary>
+    /// 获取go语言类型
+    /// </summary>
+    /// <param name="dbtype"></param>
+    /// <returns></returns>
+    public static string GetGoType(System.Data.DbType dbtype){
+        switch (dbtype)
+        {
+            case DbType.Int16: 
+            case DbType.UInt16:
+            case DbType.Int32: 
+            case DbType.UInt32: return "int";
+            case DbType.Int64: 
+            case DbType.UInt64: return "int64";
+            case DbType.Byte: return "int";
+            case DbType.Date:
+            case DbType.DateTime:
+            case DbType.DateTime2: return "string";
+            case DbType.String:
+            case DbType.StringFixedLength:
+            case DbType.AnsiString:
+            case DbType.AnsiStringFixedLength: return "string";
+            case DbType.Decimal: return "float64";
+            case DbType.Double: 
+            case DbType.Currency: return "float64";
+            default: return "string" ;
+        }
+    }
+}
+</script>

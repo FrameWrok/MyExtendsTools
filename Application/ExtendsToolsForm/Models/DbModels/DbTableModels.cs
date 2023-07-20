@@ -54,6 +54,6 @@ namespace ExtendsToolsForm.Models.DbModels
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public string sqlconnection { get; set; }
+        public DbConnectionModel sqlconnection { get; set; }
     }
 }

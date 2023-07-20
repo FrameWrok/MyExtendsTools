@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>beacon test page</title>
+    <script type="text/javascript" src="../Core/Script/数据采集/install_up_beacon.js"></script>
+</head>
+
+<body>
+<h1>日志测试</h1>
+<input type="button" value="Click Button" id="clickBtn" name="clickBtn" onclick="clickLog('testClickBtn','MyTest')"/>
+</body>
+</html>
+<script type="text/javascript">
+// 用户行为统计代码
+function recordStaticLogerr(authId,type,msg){
+    if (window.upLogger){
+        upLogger.authId = authId;
+        upLogger.clickLog('type=' + type + '&clickTarget=' + msg);    
+    }
+}
+
+// 记录click日志的方法
+function clickLog(clog_msg,clog_type){
+    var clog_authId    = 'sharpxiajun';
+    recordStaticLogerr(clog_authId,clog_type,clog_msg);    
+}
+</script>

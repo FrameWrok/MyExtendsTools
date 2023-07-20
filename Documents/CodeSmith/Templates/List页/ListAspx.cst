@@ -1,0 +1,235 @@
+﻿<%@ Template Language="C#" TargetLanguage="HTML" %>
+
+<%@ Property Name="SourceTable" Type="SchemaExplorer.TableSchema" Category="数据源配置" Description="表选择" Optional="True" OnChanged="tablechanged" %>
+<%@ Property Name="SourceTable2" Type="SchemaExplorer.TableSchema"  Optional="True" Category="字典注释来源" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable3" Type="SchemaExplorer.TableSchema"  Optional="True" Category="字典注释来源" Description="字段备注来源表" %>
+<%@ Property Name="SourceTable4" Type="SchemaExplorer.TableSchema"  Optional="True" Category="字典注释来源" Description="字段备注来源表" %>
+<%@ Property Name="SourceDatabase" Type="SchemaExplorer.DatabaseSchema" Category="字典注释来源" Optional="True" OnChanged="QuerySqlScriptChange" Description="数据来源为sql查询时需要配置此数据库连接，以便生成查询列" %>
+<%@ Property Name="QuerySqlScript" Type="StringCollection" Editor="StringCollectionEditor" Category="数据源配置" Description="查询sql" Optional="True" OnChanged="QuerySqlScriptChange" %>
+<%@ Property Name="SearchColumn" Type="Dictionary<String,bool>" Category="字段配置" Description="搜索条件字段" %>
+<%@ Property Name="GridColumn" Type="Dictionary<String,bool>" Category="字段配置" Description="列表显示字段" %>
+<%@ Property  Name="SelectedTableName" Type="String" Category="字段配置" Description="无需操作此字段" %>
+
+<%@ Property Name="PagePathName" Type="String" Category="代码配置" Description="页面名称" %>
+
+
+<%@ Assembly Name="SchemaExplorer" %>
+<%@ Assembly Name="CodeSmith.BaseTemplates" %>
+<%@ Assembly Name="CodeSmith.CustomProperties" %>
+<%@ Assembly Name="System.Data" %>
+<%@ Assembly Name="System" %>
+<%--<%@ Assembly Name="CodeSmithExtend" Path="../Reference" %>--%>
+<%@ Import Namespace="SchemaExplorer" %>
+<%@ Import Namespace="System.Xml" %>
+<%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading" %>
+<%@ Import Namespace="CodeSmith.CustomProperties" %>
+<%@ Import Namespace="System.Windows.Forms" %>
+<%@ Import Namespace="CodeSmith.BaseTemplates" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Data.Common" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Linq" %>
+<%@ Import Namespace="System.Text.RegularExpressions" %>
+<%@ Import Namespace="System.Collections.Generic" %>
+<%@ Import Namespace="System.Collections" %>
+<%@ Register Template="../../Reference/Extends.cst" Name="ExtendsTools" MergeProperties="False" %>
+
+<%
+ int shortDescriptionLen=6;
+ ExtendsTools et = new ExtendsTools();
+this.CopyPropertiesTo(et);
+ et.Init();
+ 
+%>
+<%%@ Page Title="" Language="C#" MasterPageFile="~/UserControl/MasterPage.master" AutoEventWireup="true" CodeFile="<%=PagePathName.Split('\\').ToList().LastOrDefault() %>.aspx.cs" Inherits="<%= PagePathName.Trim('/').Replace('/','_') %>" %%>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        input[type=text] { height: 21px; width: 100px; }
+        select { height: 21px; }
+        input[type=button], input[type=submit] { height: 21px; vertical-align: central; padding: 0px; width: 80px; }
+        th { vertical-align: middle; text-align: right; }
+    </style>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="body" runat="Server">
+    <div class="container" style="padding: 10px;">
+        <div class="searchHeader">
+            <h3><%=ExtendsTools.TableSchemaExtends.GetModelDescription()%></h3>
+            <div class="form-inline">
+                <form id="queryform" target="_blank" method="get">
+                    <% foreach (var item in et.MainTable.Columns.Where(c=>this.SearchColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name)))
+                    { string columnname = item.Name.ToLower();
+                      string columnSummary = ExtendsTools.ColumnSchemaExtends.GetColumnSummary(item);
+                      string columnShortsummary = ExtendsTools.ColumnSchemaExtends.GetColumnSummary(item,shortDescriptionLen); %> 
+                    <% switch(item.DataType) { %>         
+                      <%case DbType.AnsiString:
+                        case DbType.AnsiStringFixedLength:
+                        case DbType.String:
+                        case DbType.StringFixedLength:
+                        {%>
+                    <div class="form-group">
+                        <label for="txt<%=columnname%>"><%=columnShortsummary%></label>
+                        <input type="text" name="<%=columnname%>" id="txt<%=columnname%>"
+                            placeholder="请输入<%=columnSummary%>"/>
+                    </div>
+                        <%} break;
+                        case DbType.Date:
+                        case DbType.DateTime:
+                        case DbType.DateTime2:
+                        {%>
+                     <div class="form-group">
+                        <label><%=columnSummary%></label>
+                        <input type="text" name="<%=columnname%>start" id="txt<%=columnname%>start" onFocus="WdatePicker({isShowClear:true})"/>-<input type="text" name="<%=columnname%>end" id="txt<%=columnname%>end" onFocus="WdatePicker({isShowClear:true})"/>
+                    </div>           
+                        <%} break;
+                        case DbType.Byte:
+                        case DbType.Int16:
+                        case DbType.Int32:
+                        case DbType.Int64:{%>
+                    <div class="form-group">
+                        <label for="txt<%=columnname%>"><%=columnSummary%></label>
+                        <input type="text" data-type="Int" name="<%=columnname %>" id="txt<%=columnname%>"
+                            placeholder="请输入<%=columnSummary%>"/>
+                    </div>  
+                       <%} break; 
+                        case DbType.Double:
+                        case DbType.Decimal:{%>
+                    <div class="form-group">
+                        <label for="txt<%=columnname%>"><%=columnSummary%></label>
+                        <input type="text" maxlength="<%=item.GetInputMaxLength()%>" data-type="Decimal" DecimalLength = "<%=item.Scale %>" maxlength="<%=item.Size%>" name="<%=columnname%>" id="txt<%=columnname%>"
+                            placeholder="请输入<%=columnSummary%>"/>
+                    </div> 
+                        <%} break; %>
+                    <%} %>
+                    <%} %> 
+                    <div class="form-group" style="height:24.5px;">
+                        <input type="button" class="btn btn-primary" value="查询" id="btnQuery" onclick="querydata(1, 1)" name="query" />
+                        <input type="submit" class="btn btn-default" value="导出" name="export" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="tdRowcount" style="padding:10px 10px 5px 10px;">
+            共0条记录
+        </div>
+        <table class="table table-bordered table-condensed table-striped">
+            <thead>                
+                <tr>
+                <% foreach (var item in et.MainTable.Columns.Where(c=>this.GridColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn")){%>
+                    <th><%=ExtendsTools.ColumnSchemaExtends.GetColumnSummary(item,shortDescriptionLen)%></th>
+                <%}%>
+                </tr>
+            </thead>
+            <tbody id="gridData">
+                <asp:Repeater runat="server" ID="rpdata">
+                    <ItemTemplate>
+                        <tr>
+                          <% foreach (var item in et.MainTable.Columns.Where(c=>this.GridColumn.Where(p=>p.Value).Select(p=>p.Key).ToList().Contains(c.Name) && c.Name.ToLower()  != "rn")){%>
+                         <% if(item.DataType == DbType.Date || item.DataType== DbType.DateTime ||item.DataType== DbType.DateTime2){ %>
+                            <td><%=getEval(item.Name.ToLower(),"{0:yyyy-MM-dd HH:mm:ss}")%></td>
+                            <% continue; } %>
+                            <% if(item.DataType== DbType.Decimal ||item.DataType== DbType.Double){ %>
+                            <td><%=getEval(item.Name.ToLower(),"{0:N2}")%></td>
+                            <% continue; } 
+                            {%>
+                            <td><%=getEval(item.Name.ToLower())%></td>
+                            <%} %>
+                        <%}%>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </tbody>
+        </table>
+        <div>
+            <div style="float: left; padding-left: 10px;" id="divpagerindex"></div>
+            <div style="float: right;" id="divpager"></div>
+        </div>
+    </div>
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="script" runat="Server">
+    <script src="http://x.autoimg.cn/2sc/pc/AreaData.js" type="text/javascript"></script>
+    <script src="http://www.che168.com/js/AreaInit.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/Js/My97DatePicker/WdatePicker.js"></script>
+    <script src="/Js/OutPage.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {            
+            querydata(1, 1);
+        })
+        var param = {};
+        function querydata(pageindex, isbtnquery) {
+            $.showloading();
+            $("#gridData").html("");
+            $("#tdRowcount").html("");
+            $("#divpagerindex").html("");
+            $("#divpager").html("");
+            if (isbtnquery == 1) {
+                param = $.ToJson("#queryform");
+                //param.Company = encodeURIComponent(param.Company);
+                //查询条件中有中文请手动对字段编码
+            }
+            param.action = "query";
+            param.pageindex = pageindex;
+            
+            var querysetting = {
+                type: "get", url: location.origin + location.pathname, dataType: "JSON", async: true, data: param, cache: false, error: function () { alert("系统错误"); $.hideloading();}
+            }
+            querysetting.success = function (data) {
+                $("#gridData").html(data.html);
+                outPage.loaderPage("divpager", param.pageindex, data.totalpage, 'querydata');
+                if (data.totalpage > 0)
+                    $("#divpagerindex").html("当前第 " + param.pageindex + "  页");
+                $("#tdRowcount").html("共" + data.rowcount + "条记录");
+                $.hideloading();
+            }
+            $.ajax(querysetting);
+        }
+    </script>
+</asp:Content>
+<script runat="template">
+public TableSchema queryTable;
+public void tablechanged(object d, System.EventArgs e) {
+    //System.Diagnostics.Debugger.Launch();  
+    //System.Diagnostics.Debugger.Break(); 
+    //Debug.WriteLine("");
+    //if (this.QuerySqlScript == null || this.QuerySqlScript.Count>0) 
+        QuerySqlScriptChange(d,e);
+}
+public void QuerySqlScriptChange(object o, System.EventArgs e) {
+    if (this.QuerySqlScript != null && this.QuerySqlScript.Count>0) {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in this.QuerySqlScript) {
+            sb.AppendLine(item);
+        }
+        this.queryTable = this.SourceDatabase.GetTableSchemaByScript(sb.ToString());
+        TableToSelectColums(this.queryTable);
+    }
+    else
+    {
+        this.queryTable=this.SourceTable;
+        TableToSelectColums(this.SourceTable);
+    }
+}
+public void TableToSelectColums(TableSchema tableSchema) {
+    if (tableSchema != null && this.SelectedTableName != tableSchema.Name) {
+        this.SelectedTableName = tableSchema.Name;
+        var newGridColumn = new Dictionary<string, bool>();
+        var newsearch = new Dictionary<string, bool>();
+        if (tableSchema != null)
+            foreach (var item in tableSchema.Columns) {
+            if (item.Name.ToLower() != "rn") 
+                newsearch.Add(item.Name, !item.Name.EndsWith("id", StringComparison.OrdinalIgnoreCase));
+            newGridColumn.Add(item.Name, true);
+        }
+        if(SearchColumn ==null || SearchColumn.Count != newsearch.Count)
+            SearchColumn = newsearch;
+        if(GridColumn == null || GridColumn.Count!= newGridColumn.Count)
+            GridColumn = newGridColumn;
+    }
+}
+public string getEval(string name, string formatter = "") {
+    if (!string.IsNullOrEmpty(formatter))
+        return "<%#Eval(\"" + name + "\",\"" + formatter + "\") %>";
+    return "<%#Eval(\"" + name + "\") %>"; 
+}
+</script>

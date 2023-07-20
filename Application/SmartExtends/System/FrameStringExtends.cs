@@ -14,6 +14,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartExtends.System;
+using NPinyin;
 
 namespace System
 {
@@ -451,6 +452,28 @@ namespace System
         public static string HtmlDecode(this string str)
         {
             return System.Web.HttpUtility.HtmlDecode(str);
+        }
+
+        /// <summary>
+        /// 汉字转拼音
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="isUserName">是否人名</param>
+        /// <returns></returns>
+        public static string ToPinYin(this string str, bool isUserName)
+        {
+            return Pinyin.GetPinyin(str,isUserName);
+        }
+
+        /// <summary>
+        /// 获取汉字首字母
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="isUserName"></param>
+        /// <returns></returns>
+        public static string ToInitials(this string str, bool isUserName)
+        {
+            return Pinyin.GetInitials(str, isUserName);
         }
     }
 

@@ -1,4 +1,7 @@
 ﻿
+using System.IO;
+using System.Web.UI;
+
 namespace System
 {
     using System.Runtime.InteropServices;
@@ -31,7 +34,7 @@ namespace System
         /// 获取自增长 guid 的字符串表示形式
         /// </summary>
         /// <returns></returns>
-        public static string ToString()
+        public new static string ToString()
         {
             return Guid.ToString();
         }
@@ -186,6 +189,27 @@ namespace System.Reflection
         public static PropertyInfo[] GetPropertyInfoS(this Type o, BindingFlags binding = Reflection.BindingFlags.Public|BindingFlags.IgnoreCase|BindingFlags.Instance)
         {
             return o.GetProperties(binding);
+        }
+    }
+}
+namespace System.Web
+{
+    public static partial class FrameUserControlExtends
+    {
+        private static StringWriter tw = new StringWriter();
+        private static HtmlTextWriter writer = new HtmlTextWriter(tw);
+        /// <summary>
+        /// 由 System.Web.UI.UserControl 生成HTML
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="control"></param>
+        /// <returns></returns>
+        public static string ToHtml(this System.Web.UI.Control control)
+        {
+            writer = new HtmlTextWriter(new StringWriter());
+            control.RenderControl(writer);
+            return writer.InnerWriter.ToString();
+
         }
     }
 }

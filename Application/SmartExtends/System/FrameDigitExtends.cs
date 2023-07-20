@@ -81,11 +81,7 @@ namespace System
         private static String[] unitArr = { "拾", "佰", "仟", "万", "拾", "佰", "仟", "亿", "拾", "佰", "仟" };
         private static string[] unitMoney = { "", "万", "亿", "万" };
 
-        /// <summary>
-        /// 将数字类型转换为人民币需要的汉字形式
-        /// </summary>
-        /// <param name="sources"></param>
-        /// <returns></returns>
+
         public static string ToMoneyChiness(this int sources)
         {
             string result = "";
@@ -142,7 +138,7 @@ namespace System
             return result;
         }
         /// <summary>
-        /// 将数字类型转换为人民币需要的汉字形式
+        /// 将int类型转换为人民币需要的汉字形式
         /// </summary>
         /// <param name="sources"></param>
         /// <returns></returns>

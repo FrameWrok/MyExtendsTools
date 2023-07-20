@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ExtendsToolsForm</RootNamespace>
     <AssemblyName>ExtendsToolsForm</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -65,6 +65,7 @@
     <Compile Include="BLL\DbSchemaBLL.cs" />
     <Compile Include="BLL\PdmReaderBLL.cs" />
     <Compile Include="Dal\DbSchemaDAL.cs" />
+    <Compile Include="Models\DbModels\DbConnectionModel.cs" />
     <Compile Include="Models\DbModels\DbTableModels.cs" />
     <Compile Include="Models\DbModels\DbTableColumnSchema.cs" />
     <Compile Include="Models\PdmToChm\PdmColumnInfoModel.cs" />
@@ -76,9 +77,6 @@
     </Compile>
     <Compile Include="UserControls\DbTablesToPdm.xaml.cs">
       <DependentUpon>DbTablesToPdm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\DbToChm.xaml.cs">
-      <DependentUpon>DbToChm.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PDMToChm.xaml.cs">
       <DependentUpon>PDMToChm.xaml</DependentUpon>
@@ -100,10 +98,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\DbTablesToPdm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\DbToChm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
