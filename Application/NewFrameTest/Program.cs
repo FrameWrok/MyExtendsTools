@@ -19,15 +19,21 @@ using System.Web.Security;
 using System.Linq;
 using System.Timers;
 using System.Threading;
+using System.Security.Policy;
 namespace NewFrameTest
 {
     class Program
     {
         static void Main(string[] args)
         {
+            string url = "https://www.baidu.com/s?wd=kafka%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3&rsv_spt=?1&rsv_iqid=0x8060a9b200055f2f&issp=1&f=3&rsv_bp=1&rsv_idx=2&ie=utf-8&tn=baiduhome_pg&rsv_enter=1&rsv_dl=ts_0&rsv_sug3=9&rsv_sug1=10&rsv_sug7=101&rsv_sug2=1&rsv_btype=i&prefixsug=kafkaca&rsp=0&inputT=7197&rsv_sug4=8374";
+            Console.WriteLine((url.IndexOf("?") > 0 ? url.Substring(0, url.IndexOf("?")) : url));
+            url = "https://www.baidu.com/s";
+            Console.WriteLine((url.IndexOf("?") > 0 ? url.Substring(0, url.IndexOf("?")) : url));
+            url = "https://www.baidu.com/s/";
+            Console.WriteLine((url.IndexOf("?") > 0 ? url.Substring(0, url.IndexOf("?")) : url));
             decimal a = 1.3m;
-
-            Console.WriteLine(10000*1.3m);
+            Console.WriteLine(10000 * 1.3m);
 
             KafkaTest.testproduct();
             KafkaTest.testconsume();

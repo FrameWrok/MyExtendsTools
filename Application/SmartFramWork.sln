@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTest", "ConsoleTest\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auto2scSqlExtends", "Auto2scSqlExtends\Auto2scSqlExtends.csproj", "{BA41CB27-7DBF-4D57-8712-1ECD1F71E3F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsTest", "WinFormsTest\WinFormsTest.csproj", "{E378A9D8-7A16-4F14-9386-604145CA0450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -252,12 +254,30 @@ Global
 		{BA41CB27-7DBF-4D57-8712-1ECD1F71E3F7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BA41CB27-7DBF-4D57-8712-1ECD1F71E3F7}.Release|x86.ActiveCfg = Release|Any CPU
 		{BA41CB27-7DBF-4D57-8712-1ECD1F71E3F7}.Release|x86.Build.0 = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Debug|x86.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|x86.ActiveCfg = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Development|x86.Build.0 = Debug|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|x86.ActiveCfg = Release|Any CPU
+		{E378A9D8-7A16-4F14-9386-604145CA0450}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {FBFBDA48-E3C9-4A0B-9E49-61987ECC4070}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal

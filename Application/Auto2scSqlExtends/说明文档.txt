@@ -36,3 +36,52 @@ CREATE FUNCTION [dbo].[E09D2380503C42383C73F1301ADC9BA](@urlstr nvarchar(500),@h
 RETURNS nvarchar(4000) WITH EXECUTE AS CALLER
 AS 
 EXTERNAL NAME [Auto2scSqlExtends].[Auto2scSqlExtends.E09D2380503C4238].[E09D2380503C42383C73F1301ADC9BA]
+
+
+
+
+
+
+
+
+
+
+
+
+--手机号解密
+
+CREATE FUNCTION [dbo].[B5A4E830C5904921Decode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.B5A4E830C5904921].[Decode]
+GO
+--手机号加密
+CREATE FUNCTION [dbo].[B5A4E830C5904921Encode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.B5A4E830C5904921].[Encode]
+GO
+--身份证号解密
+CREATE FUNCTION [dbo].[C47D2489EEC74096Decode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.C47D2489EEC74096].[Decode]
+GO
+--身份证号加密
+CREATE FUNCTION [dbo].[C47D2489EEC74096Encode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.C47D2489EEC74096].[Encode]
+GO
+--车牌号解密
+CREATE FUNCTION [dbo].[E09D2380503C4238Decode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.E09D2380503C4238].[Decode]
+GO
+--车牌号加密
+CREATE FUNCTION [dbo].[E09D2380503C4238Encode](@urlstr [nvarchar](500), @hostname [nvarchar](100), @token [nvarchar](100))
+RETURNS [nvarchar](4000) WITH EXECUTE AS CALLER
+AS 
+EXTERNAL NAME [Auto2scSqlExtendsNew].[Auto2scSqlExtends.E09D2380503C4238].[Encode]
+GO

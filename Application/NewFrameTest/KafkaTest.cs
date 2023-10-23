@@ -16,11 +16,7 @@ namespace NewFrameTest
         public static void testproduct()
         {
 
-            List<string> s = new List<string>();
-            s.Add((new QueryListModel() { id = 604, audioid = "scb_241", callseconds = 25, audiotime = DateTime.Parse("2020-08-26 18:01:43.000"), localurl = "/record_new/2022/10/01/20221001010911_37664136_1_1.mp3", recordmode = 3 }).ToJson());
-            s.Add((new QueryListModel() { id = 603, audioid = "scb_240", callseconds = 25, audiotime = DateTime.Parse("2020-08-26 18:01:43.000"), localurl = "/record_new/2022/10/01/20221001005411_37664130_1_1.mp3", recordmode = 3 }).ToJson());
-            s.Add((new QueryListModel() { id = 602, audioid = "scb_238", callseconds = 25, audiotime = DateTime.Parse("2020-08-26 18:01:43.000"), localurl = "/record_new/2022/10/01/20221001003911_37664100_1_1.mp3", recordmode = 3 }).ToJson());
-            s.Add((new QueryListModel() { id = 601, audioid = "scb_237", callseconds = 12, audiotime = DateTime.Parse("2020-08-26 18:01:43.000"), localurl = "/record_new/2022/10/01/20221001002411_37664086_1_1.mp3", recordmode = 3 }).ToJson());
+            List<string> s = new List<string>();            
             s.Add((new QueryListModel() { id = 600, audioid = "scb_236", callseconds = 27, audiotime = DateTime.Parse("2020-08-26 18:01:43.000"), localurl = "/record_new/2022/10/01/20221001002411_37664083_1_1.mp3", recordmode = 3 }).ToJson());
 
             //consume();
@@ -47,7 +43,7 @@ namespace NewFrameTest
                     {
                         //p.Produce("2sc_asr_offline", new Message<Null, string> { Value = mes }, handler);
                         p.Produce(new TopicPartition("2sc_asr_offline", new Partition(1)), new Message<Null, string> { Value = mes }, handler);
-                        p.Produce(new TopicPartition("2sc_asr_offline", new Partition(2)), new Message<Null, string> { Value = mes }, handler);
+                        //p.Produce(new TopicPartition("2sc_asr_offline", new Partition(2)), new Message<Null, string> { Value = mes }, handler);
                     }
                     p.Flush(TimeSpan.FromSeconds(10));
 
@@ -75,8 +71,11 @@ namespace NewFrameTest
 
             using (var c = new ConsumerBuilder<Ignore, string>(conf).Build())
             {
-                c.Subscribe("2sc_asr_offline");
+                System.Console.WriteLine(c.Subscription.Count());
 
+                c.Subscribe("2sc_asr_offline");
+                System.Console.WriteLine(c.Subscription.Count());
+                
                 CancellationTokenSource cts = new CancellationTokenSource();
                 Console.CancelKeyPress += (_, e) =>
                 {

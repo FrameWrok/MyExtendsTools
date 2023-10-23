@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Auto2scSqlExtends</RootNamespace>
-    <AssemblyName>Auto2scSqlExtends</AssemblyName>
+    <AssemblyName>Auto2scSqlExtendsNew</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -45,6 +45,7 @@
     <Compile Include="C47D2489EEC74096.cs" />
     <Compile Include="Common\DES3.cs" />
     <Compile Include="Common\EencrypinfoDecodeLogDal.cs" />
+    <Compile Include="Common\TokenChekTools.cs" />
     <Compile Include="E09D2380503C4238.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

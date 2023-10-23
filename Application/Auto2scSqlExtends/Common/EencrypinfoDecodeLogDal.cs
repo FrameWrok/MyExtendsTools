@@ -25,7 +25,6 @@ namespace Auto2scSqlExtends.Common
                      };
                     command.Parameters.AddRange(parameters.ToArray());
                     command.ExecuteNonQuery();
-
                 }
                 finally
                 {

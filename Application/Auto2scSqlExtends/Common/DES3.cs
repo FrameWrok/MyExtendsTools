@@ -12,7 +12,7 @@ namespace Auto2scSqlExtends.Common
 
         private const string PlateNum_KEY = "*@!5@$!1IP@ssW0RD";
 
-        public static string DES3CBCEncode(string value, string key)
+        internal static string DES3CBCEncode(string value, string key, string token)
         {
             string result;
             try
@@ -36,7 +36,7 @@ namespace Auto2scSqlExtends.Common
             return result;
         }
 
-        public static string DES3CBCDecode(string value, string key)
+        internal static string DES3CBCDecode(string value, string key, string token)
         {
             string result;
             try
@@ -61,58 +61,70 @@ namespace Auto2scSqlExtends.Common
             return result;
         }
 
-        public static string MobileEncode(string mobile)
+        internal static string MobileEncode(string mobile, string token)
         {
             if (string.IsNullOrWhiteSpace(mobile))
             {
                 return "";
             }
-            return DES3CBCEncode(mobile, "%2@8#5w7k4Q3S6K9");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCEncode(mobile, MOBILE_KEY, token);
         }
 
-        public static string MobileDecode(string mobile)
+        internal static string MobileDecode(string mobile, string token)
         {
             if (string.IsNullOrWhiteSpace(mobile))
             {
                 return "";
             }
-            return DES3CBCDecode(mobile, "%2@8#5w7k4Q3S6K9");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCDecode(mobile, MOBILE_KEY, token);
         }
 
-        public static string IdCardEncode(string idCard)
+        internal static string IdCardEncode(string idCard, string token)
         {
             if (string.IsNullOrWhiteSpace(idCard))
             {
                 return "";
             }
-            return DES3CBCEncode(idCard, "%1@5#2w7k5E3T4K8");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCEncode(idCard, IDCARD_KEY, token);
         }
 
-        public static string IdCardDecode(string idCard)
+        internal static string IdCardDecode(string idCard, string token)
         {
             if (string.IsNullOrWhiteSpace(idCard))
             {
                 return "";
             }
-            return DES3CBCDecode(idCard, "%1@5#2w7k5E3T4K8");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCDecode(idCard, IDCARD_KEY, token);
         }
 
-        public static string PlateNumEncode(string platenum)
+        internal static string PlateNumEncode(string platenum, string token)
         {
             if (string.IsNullOrWhiteSpace(platenum))
             {
                 return "";
             }
-            return DES3CBCEncode(platenum, "*@!5@$!1IP@ssW0RD");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCEncode(platenum, PlateNum_KEY, token);
         }
 
-        public static string PlateNumDecode(string platenum)
+        internal static string PlateNumDecode(string platenum, string token)
         {
             if (string.IsNullOrWhiteSpace(platenum))
             {
                 return "";
             }
-            return DES3CBCDecode(platenum, "*@!5@$!1IP@ssW0RD");
+            if (!TokenChekTools.IsParseToken(token))
+                return "";
+            return DES3CBCDecode(platenum, PlateNum_KEY, token);
         }
 
         /// <summary>
