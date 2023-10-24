@@ -1,0 +1,15 @@
+﻿global using global::System;
+global using global::System.Collections.Generic;
+global using global::System.Data;
+global using global::System.Data.Common;
+global using global::System.Diagnostics;
+global using global::System.Globalization;
+global using global::System.IO;
+global using global::System.Linq;
+global using global::System.Net;
+global using global::System.Net.Http;
+global using global::System.Reflection;
+global using global::System.Text;
+global using global::System.Text.RegularExpressions;
+global using global::System.Threading;
+global using global::System.Threading.Tasks;
